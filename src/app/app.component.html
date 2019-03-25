@@ -1,6 +1,6 @@
 <header>
   <div>
-    {{user?.displayName || 'Not connected'}}
+    {{user ? (user.displayName || user.username) : 'Not connected'}}
     <br>
     <button *ngIf="user" (click)="logout()">Logout</button>
   </div>
@@ -14,6 +14,7 @@
   <a routerLink="/">Home</a>
   <a routerLink="/login">Login</a>
   <a routerLink="/nothing">Nothing</a>
+  <a routerLink="/settings">Settings</a>
 </nav>
 
 <br>

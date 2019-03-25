@@ -3,20 +3,23 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CurrentUserService } from './services/current-user.service';
 import { LoginPageComponent } from './pages/login/login-page.component';
-import { AuthenticationRoutes } from './authentication.routes';
-import { RouterModule } from '@angular/router';
 import { LocalLoginComponent } from './components/local-login/local-login.component';
 import { AuthService } from './services/auth.service';
+import { OauthCallbackComponent } from './pages/oauth-callback/oauth-callback.component';
+import { AuthenticationRoutingModule } from './authentication-routing.module';
+import { SharedModule } from '../../shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forChild(AuthenticationRoutes),
-    ReactiveFormsModule
+    AuthenticationRoutingModule,
+    ReactiveFormsModule,
+    SharedModule
   ],
   declarations: [
     LoginPageComponent,
-    LocalLoginComponent
+    LocalLoginComponent,
+    OauthCallbackComponent
   ],
   providers: [
     CurrentUserService,

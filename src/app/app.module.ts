@@ -9,6 +9,7 @@ import { AuthenticationModule } from './modules/authentication/authentication.mo
 import { AppRoutingModule } from './app-routing.module';
 import { WebStorageModule } from 'ngx-store';
 import { CommonModule } from '@angular/common';
+import { SettingsModule } from './modules/settings/settings.module';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { CommonModule } from '@angular/common';
     CoreModule,
     DashboardModule,
     AuthenticationModule,
+    SettingsModule,
     AppRoutingModule,
   ],
   providers: [],

@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  authAPIUrl: 'http://localhost:3005'
+  // authAPIUrl: 'http://auth-project.lab.makeitsaas.com/auth'
 };
 
 /*

@@ -5,11 +5,17 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { map } from 'rxjs/operators';
 import { CurrentUserService } from './current-user.service';
 import { LocalStorage } from 'ngx-store';
+import {environment} from '@env';
 
 const helper = new JwtHelperService();
 
 // const LOGIN_URL = 'http://auth-project.lab.makeitsaas.com/auth/login';
-const LOGIN_URL = 'http://localhost:3005/login';
+const LOGIN_URL = environment.authAPIUrl + '/login';
+const OAUTH_CALLBACK_URL = environment.authAPIUrl + '/oauth/:strategy/callback';
+
+interface TokenResponse {
+  token: string;
+}
 
 @Injectable()
 export class AuthService {
@@ -27,8 +33,7 @@ export class AuthService {
   }
 
   login(username, password): Observable<any> {
-    console.log('ok login', username, password);
-    return this.http.post<any>(LOGIN_URL, {username, password}, {})
+    return this.http.post<TokenResponse>(LOGIN_URL, {username, password}, {})
       .pipe(map(({token}) => {
         const {decoded, isExpired} = this.parseJWT(token);
 
@@ -42,13 +47,26 @@ export class AuthService {
       }));
   }
 
+  sendAuthorizationCode(code, strategy): Observable<boolean> {
+    // according to RFC, we get from an authorization server a code (unique usage),
+    // which we send to our API for it to fetch an access_token
+    const url = OAUTH_CALLBACK_URL.replace(':strategy', strategy);
+    return this.http.get<TokenResponse>(url, {params: {code}})
+      .pipe(map(({token}) => {
+        const {decoded, isExpired} = this.parseJWT(token);
+
+        this.useJwt(token);
+
+        return !isExpired;
+      }));
+  }
+
   useJwt(token: string) {
     const {decoded, isExpired} = this.parseJWT(token);
     if (!isExpired) {
       this.jwt = token;
       this.currentUserService.setUser(decoded.user);
     } else {
-      console.log('too old');
       this.logout();
     }
   }

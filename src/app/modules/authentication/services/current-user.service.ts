@@ -20,4 +20,8 @@ export class CurrentUserService {
     this.currentUser = user;
     this.currentUserSubject.next(this.currentUser);
   }
+
+  isAuthenticated(): boolean {
+    return !!this.currentUser;
+  }
 }
