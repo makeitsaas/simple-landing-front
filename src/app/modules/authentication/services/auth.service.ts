@@ -9,12 +9,21 @@ import {environment} from '@env';
 
 const helper = new JwtHelperService();
 
-// const LOGIN_URL = 'http://auth-project.lab.makeitsaas.com/auth/login';
+const API_HOST = environment.APIUrl.replace(/^https?:\/\//, '');
 const LOGIN_URL = environment.authAPIUrl + '/login';
 const OAUTH_CALLBACK_URL = environment.authAPIUrl + '/oauth/:strategy/callback';
 
 interface TokenResponse {
   token: string;
+}
+
+export function jwtOptionsFactory(tokenService) {
+  return {
+    tokenGetter: () => {
+      return Promise.resolve(tokenService.getToken());
+    },
+    whitelistedDomains: [API_HOST]
+  };
 }
 
 @Injectable()
@@ -30,6 +39,10 @@ export class AuthService {
       console.log('check previous jwt');
       this.useJwt(this.jwt);
     }
+  }
+
+  public getToken(): string {
+    return this.jwt;
   }
 
   login(username, password): Observable<any> {
