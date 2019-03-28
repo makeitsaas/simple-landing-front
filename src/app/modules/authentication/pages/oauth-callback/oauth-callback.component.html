@@ -1,15 +1,18 @@
-Oauth Callback
+<div class="page-layout">
+  <div class="content">
+    Oauth Callback
 
-<div class="alert alert-success" *ngIf="successMessage">
-  {{successMessage}}
-</div>
-<div class="alert alert-danger" *ngIf="errorMessage">
-  {{errorMessage}}
-</div>
+    <div class="alert alert-success" *ngIf="successMessage">
+      {{successMessage}}
+    </div>
+    <div class="alert alert-danger" *ngIf="errorMessage">
+      {{errorMessage}}
+    </div>
 
-<pre>
-Strategy={{strategy}}
+    <pre>Strategy={{strategy}}
 Code={{providerCode}}
 </pre>
 
-<app-loader [loading]="loading"></app-loader>
+    <app-loader [loading]="loading"></app-loader>
+  </div>
+</div>

@@ -1,7 +1,29 @@
 header {
-  div {
-    position: absolute;
-    top: 5px;
-    right: 10px;
+  height: 37px;
+  //width: 100%;
+  background-color: #EEE;
+  padding: 5px 10px;
+
+  .menu-left {
+    float: left;
   }
+
+  .menu-right {
+    float: right;
+  }
+}
+
+mat-sidenav-container, mat-sidenav-content {
+  height: 100%;
+}
+
+.content-wrapper {
+  min-height: 100%;
+}
+
+.left-nav {
+  z-index: 1000;
+  height: 100%;
+  padding: 70px 20px 50px 20px;
+  min-width: 170px;
 }
