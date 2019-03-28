@@ -36,7 +36,6 @@ export class AuthService {
     private currentUserService: CurrentUserService
   ) {
     if (this.jwt) {
-      console.log('check previous jwt');
       this.useJwt(this.jwt);
     }
   }

@@ -10,7 +10,6 @@ const authenticationRoutes: Routes = [
     canActivate: [AnonymousGuard],
     component: LoginPageComponent
   },
-  // { path: 'oauth/callback', component: OauthCallbackComponent },
   {
     path: 'oauth/callback/:strategy',
     component: OauthCallbackComponent
