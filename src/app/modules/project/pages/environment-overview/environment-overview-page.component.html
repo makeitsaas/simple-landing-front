@@ -1,9 +1,25 @@
 <div class="page-layout">
   <div class="content">
     <i style="float: right;font-size: .7em;">Environnement: {{environmentId}} (<a [routerLink]="'/projects/'+projectId">project {{projectId}}</a>)</i>
-    <button mat-button mat-raised-button color="primary" [matMenuTriggerFor]="environmentActions" style="margin-left: 100px">
-      Actions
-      <mat-icon class="secondary-text mat-icon material-icons mat-icon-no-color" role="img" aria-hidden="true">menu</mat-icon>
+    <button mat-button mat-raised-button color="primary" [matMenuTriggerFor]="editActions" style="margin-left: 100px">
+      Configure
+      <mat-icon class="secondary-text mat-icon material-icons mat-icon-no-color" role="img" aria-hidden="true">create</mat-icon>
+    </button>
+    <button mat-button mat-raised-button color="primary" [matMenuTriggerFor]="deployActions" style="margin-left: 10px">
+      Operations
+      <mat-icon class="secondary-text mat-icon material-icons mat-icon-no-color" role="img" aria-hidden="true">backup</mat-icon>
+    </button>
+    <button
+      mat-button mat-raised-button
+      color="primary" style="margin-left: 10px"
+      (click)="clickWorkLocal()"
+      matTooltip="Show commands for local work">
+      Work local
+      <mat-icon class="secondary-text mat-icon material-icons mat-icon-no-color" role="img" aria-hidden="true">get_app</mat-icon>
+    </button>
+    <button mat-button mat-raised-button color="success" style="margin-left: 10px">
+      Save
+      <mat-icon class="secondary-text mat-icon material-icons mat-icon-no-color" role="img" aria-hidden="true">save</mat-icon>
     </button>
     <br>
     <br>
@@ -14,27 +30,46 @@
 
 
 
-<mat-menu #environmentActions="matMenu">
+<mat-menu #editActions="matMenu">
   <button mat-menu-item [matMenuTriggerFor]="domainActions">Domains</button>
-  <button mat-menu-item [matMenuTriggerFor]="defaultSubMenu">Services</button>
+  <button mat-menu-item [matMenuTriggerFor]="serviceActions">Services</button>
   <button mat-menu-item [matMenuTriggerFor]="defaultSubMenu">Queues</button>
   <button mat-menu-item [matMenuTriggerFor]="defaultSubMenu">Data Lakes</button>
 </mat-menu>
 
 <mat-menu #domainActions="matMenu">
-  <button mat-menu-item>Create</button>
+  <button mat-menu-item (click)="addDomain()">Create</button>
+</mat-menu>
+
+<mat-menu #serviceActions="matMenu">
+  <button mat-menu-item (click)="addService()">Create</button>
 </mat-menu>
 
 <mat-menu #defaultSubMenu="matMenu">
-  <button mat-menu-item>Create</button>
-  <button mat-menu-item>Update</button>
-  <button mat-menu-item>Delete</button>
+  <button mat-menu-item disabled>Create</button>
+  <button mat-menu-item disabled>Update</button>
+  <button mat-menu-item disabled>Delete</button>
   <button mat-menu-item [matMenuTriggerFor]="defaultSubMenu2">Settings</button>
 </mat-menu>
 
 <mat-menu #defaultSubMenu2="matMenu">
-  <button mat-menu-item>Create</button>
-  <button mat-menu-item>Update</button>
-  <button mat-menu-item>Delete</button>
-  <button mat-menu-item>Settings</button>
+  <button mat-menu-item disabled>Create</button>
+  <button mat-menu-item disabled>Update</button>
+  <button mat-menu-item disabled>Delete</button>
+  <button mat-menu-item disabled>Settings</button>
+</mat-menu>
+
+
+
+
+<mat-menu #deployActions="matMenu">
+  <button mat-menu-item>Deploy</button>
+  <button mat-menu-item matTooltip="Show diff since last save, or compare with another environment">Show diff</button>
+  <button mat-menu-item [matMenuTriggerFor]="otherEnvironments">Push to</button>
+</mat-menu>
+
+<mat-menu #otherEnvironments="matMenu">
+  <button mat-menu-item>Prod</button>
+  <button mat-menu-item>Test</button>
+  <button mat-menu-item>Dev</button>
 </mat-menu>

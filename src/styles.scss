@@ -23,3 +23,15 @@ html, body  {
   padding: 10px 15px;
   max-width: 800px;
 }
+
+.mat-success {
+  background-color: green;
+  color: #fff;
+}
+
+pre, code {
+  background: rgba(0,0,0,.03);
+}
+
+pre {padding: 5px 10px}
+code {padding: 1px 5px}

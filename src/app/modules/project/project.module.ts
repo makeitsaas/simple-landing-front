@@ -4,7 +4,9 @@ import { ProjectRoutingModule } from './project-routing.module';
 import { EnvironmentOverviewPageComponent } from './pages/environment-overview/environment-overview-page.component';
 import { EnvironmentDiagramComponent } from './components/environment-diagram/environment-diagram.component';
 import { CommonModule } from '@angular/common';
-import { MatButtonModule, MatGridListModule, MatIconModule, MatMenuModule, MatTooltipModule } from '@angular/material';
+import { MatButtonModule, MatDialogModule, MatGridListModule, MatIconModule, MatMenuModule, MatTooltipModule } from '@angular/material';
+import { EnvironmentService } from './services/environment.service';
+import { ModalWorkLocalComponent } from './components/modals/work-local/modal-work-local.component';
 
 @NgModule({
   imports: [
@@ -16,16 +18,22 @@ import { MatButtonModule, MatGridListModule, MatIconModule, MatMenuModule, MatTo
     MatTooltipModule,
     MatMenuModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatDialogModule
   ],
   declarations: [
     ProjectOverviewPageComponent,
     EnvironmentOverviewPageComponent,
-    EnvironmentDiagramComponent
+    EnvironmentDiagramComponent,
+    ModalWorkLocalComponent
   ],
   providers: [
+    EnvironmentService
   ],
   exports: [
+  ],
+  entryComponents: [
+    ModalWorkLocalComponent
   ]
 })
 export class ProjectModule {}
