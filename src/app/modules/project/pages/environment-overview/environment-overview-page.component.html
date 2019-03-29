@@ -1,5 +1,40 @@
 <div class="page-layout">
   <div class="content">
-    Environnement: {{environmentId}} (project {{projectId}})
+    <i style="float: right;font-size: .7em;">Environnement: {{environmentId}} (<a [routerLink]="'/projects/'+projectId">project {{projectId}}</a>)</i>
+    <button mat-button mat-raised-button color="primary" [matMenuTriggerFor]="environmentActions" style="margin-left: 100px">
+      Actions
+      <mat-icon class="secondary-text mat-icon material-icons mat-icon-no-color" role="img" aria-hidden="true">menu</mat-icon>
+    </button>
+    <br>
+    <br>
+    <br>
+    <app-environment-diagram [environmentId]="environmentId"></app-environment-diagram>
   </div>
 </div>
+
+
+
+<mat-menu #environmentActions="matMenu">
+  <button mat-menu-item [matMenuTriggerFor]="domainActions">Domains</button>
+  <button mat-menu-item [matMenuTriggerFor]="defaultSubMenu">Services</button>
+  <button mat-menu-item [matMenuTriggerFor]="defaultSubMenu">Queues</button>
+  <button mat-menu-item [matMenuTriggerFor]="defaultSubMenu">Data Lakes</button>
+</mat-menu>
+
+<mat-menu #domainActions="matMenu">
+  <button mat-menu-item>Create</button>
+</mat-menu>
+
+<mat-menu #defaultSubMenu="matMenu">
+  <button mat-menu-item>Create</button>
+  <button mat-menu-item>Update</button>
+  <button mat-menu-item>Delete</button>
+  <button mat-menu-item [matMenuTriggerFor]="defaultSubMenu2">Settings</button>
+</mat-menu>
+
+<mat-menu #defaultSubMenu2="matMenu">
+  <button mat-menu-item>Create</button>
+  <button mat-menu-item>Update</button>
+  <button mat-menu-item>Delete</button>
+  <button mat-menu-item>Settings</button>
+</mat-menu>

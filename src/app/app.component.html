@@ -25,6 +25,7 @@
             <mat-icon class="secondary-text mat-icon material-icons mat-icon-no-color" role="img" aria-hidden="true">menu</mat-icon>
           </button>
         </div>
+
         <div class="menu-right">
 
           <mat-menu #appMenu="matMenu">
@@ -37,6 +38,10 @@
             {{user ? (user.displayName || user.username) : 'Not connected'}}
             <mat-icon>more_vert</mat-icon>
           </button>
+        </div>
+
+        <div class="menu-center">
+          <h4>Make it SaaS</h4>
         </div>
       </nav>
     </header>

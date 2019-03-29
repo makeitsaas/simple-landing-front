@@ -1,5 +1,24 @@
 <div class="page-layout">
   <div class="content">
-    Project: {{projectId}}
+    <h2 class="md-display-1">Project: {{projectId}}</h2>
+    <hr>
+    <br>
+    <br>
+
+    <div class="workflow-container">
+      <div class="workflow">
+        <a class="environment" [routerLink]="'/projects/'+projectId+'/environments/'+1">
+          Prod
+        </a>
+        <div class="arrow"></div>
+        <a class="environment" [routerLink]="'/projects/'+projectId+'/environments/'+2">
+          Test
+        </a>
+        <div class="arrow"></div>
+        <a class="environment" [routerLink]="'/projects/'+projectId+'/environments/'+3">
+          Dev
+        </a>
+      </div>
+    </div>
   </div>
 </div>

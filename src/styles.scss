@@ -2,15 +2,24 @@
 
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 
+/*
+@import '~@angular/material/theming';
+$custom-typography: mat-typography-config(
+  $font-family: 'Roboto, monospace',
+  $headline: mat-typography-level(32px, 48px, 700),
+  $body-1: mat-typography-level(16px, 24px, 500)
+);
+*/
 
 html, body  {
   height: 100%;
   margin: 0;
   min-height: 100%;
+  font-family: Roboto,"Helvetica Neue Light","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
 }
 
 .page-layout > .content {
   margin: auto;
   padding: 10px 15px;
-  max-width: 1000px;
+  max-width: 800px;
 }

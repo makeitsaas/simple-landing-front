@@ -11,7 +11,14 @@ import { WebStorageModule } from 'ngx-store';
 import { CommonModule } from '@angular/common';
 import { SettingsModule } from './modules/settings/settings.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatButtonModule, MatCheckboxModule, MatIconModule, MatListModule, MatMenuModule, MatSidenavModule } from '@angular/material';
+import {
+  MatButtonModule,
+  MatCheckboxModule,
+  MatIconModule,
+  MatListModule,
+  MatMenuModule,
+  MatSidenavModule
+} from '@angular/material';
 import { FormsModule } from '@angular/forms';
 import { ProjectModule } from './modules/project/project.module';
 
