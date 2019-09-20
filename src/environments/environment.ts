@@ -4,9 +4,9 @@
 
 export const environment = {
   production: false,
-  // authAPIUrl: 'http://localhost:3005'
-  APIUrl: 'http://auth-project.lab.makeitsaas.com',
-  authAPIUrl: 'http://auth-project.lab.makeitsaas.com/auth'
+  APIUrl: 'http://localhost:3000',
+  authAPIUrl: 'http://localhost:3005'
+  // authAPIUrl: 'http://auth-project.lab.makeitsaas.com/auth'
 };
 
 /*
