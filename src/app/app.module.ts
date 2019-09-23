@@ -21,6 +21,7 @@ import {
 } from '@angular/material';
 import { FormsModule } from '@angular/forms';
 import { ProjectModule } from './modules/project/project.module';
+import { EditorsModule } from './modules/editors/editors.module';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { ProjectModule } from './modules/project/project.module';
     AuthenticationModule,
     SettingsModule,
     ProjectModule,
+    EditorsModule,
     AppRoutingModule,
 
     /* Material Modules */
