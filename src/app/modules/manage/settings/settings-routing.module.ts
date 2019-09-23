@@ -1,11 +1,11 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { AccountSettingsPageComponent } from './pages/account-settings/account-settings-page.component';
-import { AuthenticatedGuard } from '../../core/guards/authenticated.guard';
+import { AuthenticatedGuard } from '../../../core/guards/authenticated.guard';
 
 const settingsRoutes: Routes = [
   {
-    path: 'settings',
+    path: '',
     canActivate: [AuthenticatedGuard],
     component: AccountSettingsPageComponent
   }

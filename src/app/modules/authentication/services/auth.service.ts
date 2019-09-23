@@ -5,7 +5,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { map } from 'rxjs/operators';
 import { CurrentUserService } from './current-user.service';
 import { LocalStorage } from 'ngx-store';
-import {environment} from '@env';
+import { environment } from '@env';
 
 const helper = new JwtHelperService();
 
@@ -30,6 +30,8 @@ export function jwtOptionsFactory(tokenService) {
 export class AuthService {
 
   @LocalStorage() jwt: string;
+  private ready = new Promise((resolve => this.readyResolve = resolve));
+  private readyResolve: () => void;
 
   constructor(
     private http: HttpClient,
@@ -37,7 +39,12 @@ export class AuthService {
   ) {
     if (this.jwt) {
       this.useJwt(this.jwt);
+      this.readyResolve();
     }
+  }
+
+  public onReady() {
+    return this.ready;
   }
 
   public getToken(): string {

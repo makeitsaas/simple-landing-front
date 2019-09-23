@@ -4,24 +4,14 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { CoreModule } from './core/core.module';
-import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { AuthenticationModule } from './modules/authentication/authentication.module';
 import { AppRoutingModule } from './app-routing.module';
 import { WebStorageModule } from 'ngx-store';
 import { CommonModule } from '@angular/common';
-import { SettingsModule } from './modules/settings/settings.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  MatButtonModule,
-  MatCheckboxModule,
-  MatIconModule,
-  MatListModule,
-  MatMenuModule,
-  MatSidenavModule
-} from '@angular/material';
 import { FormsModule } from '@angular/forms';
-import { ProjectModule } from './modules/project/project.module';
 import { EditorsModule } from './modules/editors/editors.module';
+import { ManageModule } from './modules/manage/manage.module';
 
 @NgModule({
   declarations: [
@@ -35,20 +25,10 @@ import { EditorsModule } from './modules/editors/editors.module';
     FormsModule,
     BrowserAnimationsModule,
     CoreModule,
-    DashboardModule,
     AuthenticationModule,
-    SettingsModule,
-    ProjectModule,
+    ManageModule,
     EditorsModule,
-    AppRoutingModule,
-
-    /* Material Modules */
-    MatMenuModule,
-    MatButtonModule,
-    MatSidenavModule,
-    MatCheckboxModule,
-    MatIconModule,
-    MatListModule
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]

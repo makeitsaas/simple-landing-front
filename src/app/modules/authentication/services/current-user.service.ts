@@ -12,6 +12,8 @@ export class CurrentUserService {
   private currentUser: AuthenticatedUser;
   private currentUserSubject: BehaviorSubject<AuthenticatedUser> = new BehaviorSubject<AuthenticatedUser>(null);
 
+  constructor() {}
+
   onUser(): Observable<AuthenticatedUser> {
     return this.currentUserSubject.asObservable();
   }

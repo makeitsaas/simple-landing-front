@@ -8,23 +8,5 @@ import { Router } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
-  user: any;
-  opened = false;
-
-  constructor(
-    private currentUserService: CurrentUserService,
-    private authService: AuthService,
-    private router: Router
-  ) {
-    router.events.subscribe(() => this.opened = false);
-  }
-
-  ngOnInit() {
-    this.currentUserService.onUser().subscribe(user => this.user = user);
-  }
-
-  logout() {
-    this.authService.logout();
-  }
+export class AppComponent {
 }
