@@ -1,4 +1,5 @@
 import { Component, ElementRef, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { HtmlElementsService } from '../../../services/html-elements.service';
 
 @Component({
   selector: 'dynamic-value',
@@ -11,7 +12,10 @@ export class DynamicValueComponent implements OnInit {
 
   sampleModel = '';
 
-  constructor(private el: ElementRef) {
+  constructor(
+    private el: ElementRef,
+    private htmlElementsService: HtmlElementsService
+  ) {
   }
 
   ngOnInit() {
@@ -19,11 +23,30 @@ export class DynamicValueComponent implements OnInit {
   }
 
   saveEditable(newValue: string) {
-    console.log(`save element(${this.dataId})[${this.dataCode}]`, newValue);
+    // console.log(`save element(${this.dataId})[${this.dataCode}]`, newValue);
     this.sampleModel = newValue;
+    const putOptions = this.assignDotKey({}, this.dataCode, newValue);
+    this.htmlElementsService.updateElement(this.dataId, putOptions)
+      .subscribe(() => console.log('success'), err => this.onError(err));
   }
 
-  onError() {
-    console.log('error');
+  onError(err?: Error) {
+    console.log('dynamic value error', err);
+  }
+
+  assignDotKey(obj, dotKey, value) {
+    const keys = dotKey.split('.');
+    const first = keys.shift();
+
+    if (first) {
+      if (keys.length) {
+        obj[first] = this.assignDotKey(obj[first] || {}, keys.join('.'), value);
+      } else {
+        obj[first] = value;
+      }
+    }
+
+
+    return obj;
   }
 }

@@ -1,4 +1,4 @@
-<div *ngIf='!editMode' (click)='edit()' class='cell' [class.empty]="!data">{{ data || "various" }}</div>
+<div *ngIf='!editMode' (click)='edit()' class='cell' [class.empty]="!data">{{ data || "empty" }}</div>
 <input *ngIf='editMode'
        (focusout)="cancel()"
        (keydown.enter)='submit()'

@@ -29,4 +29,18 @@ export class HtmlElementsService {
       return response;
     }));
   }
+
+  updateElement(htmlElementId: string | number, {fields, translations}: { fields?: any, translations?: any }): Observable<any> {
+    const currentLanguage = 'en';
+    const translationsByLang = {};
+
+    if (translations) {
+      translationsByLang[currentLanguage] = translations;
+    }
+
+    return this.http.put(environment.APIUrl + `/pages/1/elements/${htmlElementId}`, {fields, translations: translationsByLang})
+      .pipe(map((response: any) => {
+        return response;
+      }));
+  }
 }

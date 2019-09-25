@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 
+// DEPRECATED
 @Component({
   selector: 'app-inline-field',
   templateUrl: './inline-field.component.html'
