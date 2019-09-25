@@ -15,12 +15,12 @@ export class DynamicValueComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.sampleModel = this.el.nativeElement.textContent;
   }
 
-  saveEditable(e: string) {
-    console.log(`save element(${this.dataId})[${this.dataCode}]`, e);
+  saveEditable(newValue: string) {
+    console.log(`save element(${this.dataId})[${this.dataCode}]`, newValue);
+    this.sampleModel = newValue;
   }
 
   onError() {

@@ -1,5 +1,8 @@
-<div *ngIf='!editMode' (click)='editMode=true' class='cell' [class.empty]="!data">{{ data || "various" }}</div>
-<!--<div *ngIf='!editMode' (click)='editMode=true' class='cell'>{{currency}} {{ data | number:'':'en' }}</div>-->
-<input *ngIf='editMode' (focusout)="onFocusOut()" (keydown.enter)='$event.target.blur()' [(ngModel)]='data'
+<div *ngIf='!editMode' (click)='edit()' class='cell' [class.empty]="!data">{{ data || "various" }}</div>
+<input *ngIf='editMode'
+       (focusout)="cancel()"
+       (keydown.enter)='submit()'
+       (keydown.escape)='cancel()'
+       [(ngModel)]='dataModel'
        class='cellInput'
-       appAutofocus type='text' (keydown.enter)='$event.target.blur()' (focusout)="editMode=false">
+       appAutofocus type='text'>

@@ -9,6 +9,7 @@ export class EditInputComponent implements OnInit {
   @Input() data: string;
   @Output() focusOut: EventEmitter<string> = new EventEmitter<string>();
   editMode = false;
+  dataModel: string;
 
   constructor() {
   }
@@ -16,7 +17,18 @@ export class EditInputComponent implements OnInit {
   ngOnInit() {
   }
 
-  onFocusOut() {
-    this.focusOut.emit(this.data);
+  edit() {
+    this.dataModel = `${this.data || ''}`;
+    this.editMode = true;
+  }
+
+  cancel() {
+    this.dataModel = `${this.data || ''}`;
+    this.editMode = false;
+  }
+
+  submit() {
+    this.focusOut.emit(this.dataModel);
+    this.editMode = false;
   }
 }
