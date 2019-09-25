@@ -1,0 +1,4 @@
+<div style="display: none">
+  <ng-content #initialContent></ng-content>
+</div>
+<app-edit-input [data]='sampleModel' (focusOut)='saveEditable($event)'></app-edit-input>

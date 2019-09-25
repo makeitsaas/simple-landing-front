@@ -1,0 +1,8 @@
+<ng-template #myTemplate>
+  <div [innerHTML]="blockContent">block</div>
+</ng-template>
+<div #magicContainer></div>
+<div #autre></div>
+<div *ngIf="template">
+  <ng-container *ngTemplateOutlet="template"></ng-container>
+</div>
