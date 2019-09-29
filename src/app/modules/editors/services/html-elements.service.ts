@@ -90,6 +90,7 @@ export class HtmlElementsService {
   private transformElementAsDraggable(element: any) {
     return {
       content: 'something',
+      cssClasses: `element-${element.type}`,
       type: element.type,
       baseElement: element,
     };

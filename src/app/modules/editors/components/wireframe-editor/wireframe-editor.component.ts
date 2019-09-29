@@ -6,6 +6,7 @@ import { HtmlElementsService } from '../../services/html-elements.service';
 interface NestableListItem {
   content: string;
   type: string;
+  cssClasses?: string;
   disable?: boolean;
   handle?: boolean;
   customDragImage?: boolean;
@@ -19,6 +20,7 @@ const columnTemplate: NestableListItem = {
 };
 
 @Component({
+  selector: 'wireframe-editor',
   templateUrl: './wireframe-editor.component.html',
   styleUrls: ['wireframe-editor.component.scss']
 })
@@ -95,5 +97,16 @@ export class WireframeEditorComponent implements OnInit {
 
   getAcceptableChildrenTypes(item: NestableListItem) {
     return this.htmlElementsService.getAcceptableChildrenTypes(item.type);
+  }
+
+  getElementCssClasses(item: NestableListItem) {
+    const classes = {};
+
+    if (item.cssClasses) {
+      const classNames = item.cssClasses.split(' ');
+      classNames.forEach(className => classes[className] = true);
+    }
+
+    return classes;
   }
 }

@@ -34,13 +34,15 @@
   border-radius: 50%;
 }
 
+[ng-reflect-dnd-dropzone],
 [dndDropzone] {
-
   border: 1px red solid;
-  min-width: 200px;
-  min-height: 200px;
+  //min-width: 200px;
+  //min-height: 200px;
+  min-height: 20px;
 }
 
+[ng-reflect-dnd-dropzone].dndDropzoneDisabled,
 [dndDropzone].dndDropzoneDisabled {
 
   cursor: no-drop;
@@ -48,6 +50,7 @@
   border-color: gray;
 }
 
+[ng-reflect-dnd-dropzone].dndDragover,
 [dndDropzone].dndDragover {
 
   border-color: green;
