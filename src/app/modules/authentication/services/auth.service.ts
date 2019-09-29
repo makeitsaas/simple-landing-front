@@ -39,8 +39,8 @@ export class AuthService {
   ) {
     if (this.jwt) {
       this.useJwt(this.jwt);
-      this.readyResolve();
     }
+    this.readyResolve();
   }
 
   public onReady() {

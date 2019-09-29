@@ -1,0 +1,16 @@
+:host {
+
+  display: block;
+  box-sizing: border-box;
+}
+
+mat-card {
+
+  transition: transform 200ms, opacity 200ms;
+}
+
+.dndDraggingSource {
+
+  opacity: .5;
+  transform: scale(.98);
+}

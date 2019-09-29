@@ -11,12 +11,18 @@ import { EditInputComponent } from './forms/inputs/edit-input/edit-input.compone
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { BlockElementComponent } from './components/block-element/block-element.component';
 import { DynamicValueComponent } from './forms/inputs/dynamic-value/dynamic-value.component';
+import { DndModule } from 'ngx-drag-drop';
+import { MatCardModule, MatIconModule, MatSnackBarModule } from '@angular/material';
 
 @NgModule({
   imports: [
     FormsModule,
     CommonModule,
-    EditorsRoutingModule
+    EditorsRoutingModule,
+    DndModule,
+    MatSnackBarModule,
+    MatCardModule,
+    MatIconModule
   ],
   declarations: [
     BaseEditorComponent,
@@ -34,4 +40,5 @@ import { DynamicValueComponent } from './forms/inputs/dynamic-value/dynamic-valu
   ],
   entryComponents: [InlineFieldComponent]
 })
-export class EditorsModule {}
+export class EditorsModule {
+}

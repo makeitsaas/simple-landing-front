@@ -1,1 +1,83 @@
-duh
+<div class="wireframe-editor">
+  <div class="layout-padding">
+    <!-- Available new elements -->
+    <div class="layout-padding">
+
+      <ng-container *ngTemplateOutlet="storeItems; context:{ $implicit: store }"></ng-container>
+
+    </div>
+
+    <!-- Actual page tree -->
+    <div class="layout-padding"
+         [dndDropzone]="['section']"
+         (dndDrop)="onDrop($event, nestableList)">
+
+      <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: nestableList }"></ng-container>
+
+    </div>
+
+    <!-- page bottom: add section - later (maybe put this action inside section) -->
+
+  </div>
+  <pre>{{nestableList|json}}</pre>
+</div>
+
+<ng-template #storeItems let-store>
+  <div *ngFor="let storeItem of store">
+    <div [dndDraggable]="storeItem"
+         [dndType]="storeItem.type"
+         dndEffectAllowed="copy"
+         [dndDisableIf]="storeItem.disable"
+         (dndStart)="onDragStart($event)"
+         (dndCopied)="onDragged(storeItem, store, 'copy')"
+         (dndLinked)="onDragged(storeItem, store, 'link')"
+         (dndMoved)="onDragged(storeItem, store, 'move')"
+         (dndCanceled)="onDragged(storeItem, store, 'none')"
+         (dndEnd)="onDragEnd($event)">
+      {{storeItem.content}}
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #recursiveList
+             let-list>
+
+  <mat-card dndPlaceholderRef
+            class="dndPlaceholder">
+  </mat-card>
+
+  <mat-card *ngFor="let item of list"
+            [dndDraggable]="item"
+            [dndType]="item.type"
+            dndEffectAllowed="move"
+            [dndDisableIf]="item.disable"
+            (dndStart)="onDragStart($event)"
+            (dndCopied)="onDragged(item, list, 'copy')"
+            (dndLinked)="onDragged(item, list, 'link')"
+            (dndMoved)="onDragged(item, list, 'move')"
+            (dndCanceled)="onDragged(item, list, 'none')"
+            (dndEnd)="onDragEnd($event)">
+
+    <mat-icon *ngIf="item.handle"
+              mat-list-icon
+              dndHandle>drag_handle
+    </mat-icon>
+
+    {{item.content}} ({{item.type}})
+
+    <div *ngIf="item.customDragImage"
+         dndDragImageRef>MY_CUSTOM_DRAG_IMAGE
+    </div>
+
+    <div *ngIf="item.children"
+         class="layout-padding"
+         [dndDropzone]="getAcceptableChildrenTypes(item)"
+         (dndDrop)="onDrop($event, item.children)">
+
+      <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: item.children }"></ng-container>
+
+    </div>
+
+  </mat-card>
+
+</ng-template>
