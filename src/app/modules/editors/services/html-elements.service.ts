@@ -7,6 +7,12 @@ import { AssetsInterface } from '../interfaces/assets.interface';
 
 const HTML_CALL_LIMIT = 10000;
 
+export interface HtmlElementInterface {
+  id: string;
+  type: string;
+  parent?: HtmlElementInterface;
+}
+
 export interface IPageLayers {
   styles: AssetsInterface[];
   contentHtml: string;
@@ -92,7 +98,7 @@ export class HtmlElementsService {
       content: 'something',
       cssClasses: `element-${element.type}`,
       type: element.type,
-      baseElement: element,
+      originalElement: element,
     };
   }
 

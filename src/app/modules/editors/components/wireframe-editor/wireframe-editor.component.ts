@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { DndDropEvent, DropEffect } from 'ngx-drag-drop';
 import { MatSnackBar } from '@angular/material';
-import { HtmlElementsService } from '../../services/html-elements.service';
+import { HtmlElementInterface, HtmlElementsService } from '../../services/html-elements.service';
 
-interface NestableListItem {
+export interface NestableListItem {
   content: string;
   type: string;
+  originalElement?: HtmlElementInterface;
   cssClasses?: string;
   disable?: boolean;
   handle?: boolean;
@@ -99,12 +100,29 @@ export class WireframeEditorComponent implements OnInit {
     return this.htmlElementsService.getAcceptableChildrenTypes(item.type);
   }
 
-  getElementCssClasses(item: NestableListItem) {
-    const classes = {};
+  getElementCssClasses(item: NestableListItem, parentType: string) {
+    const classes: { [key: string]: boolean } = {};
+    const commonClasses = this.getCommonChildCssClasses(parentType);
 
     if (item.cssClasses) {
       const classNames = item.cssClasses.split(' ');
       classNames.forEach(className => classes[className] = true);
+    } else {
+      classes[`element-${item.type}`] = true;
+    }
+
+    return Object.assign(commonClasses, classes);
+  }
+
+  getCommonChildCssClasses(parentType: string) {
+    const classes: { [key: string]: boolean } = {};
+
+    if (parentType === 'section') {
+      classes.container = true;
+    }
+
+    if (parentType === 'columns') {
+      classes['col-md-6'] = true;
     }
 
     return classes;

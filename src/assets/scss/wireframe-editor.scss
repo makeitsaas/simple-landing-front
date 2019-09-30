@@ -1,33 +1,27 @@
-.layout-padding {
-
-  padding: 8px;
+* {
+  box-sizing: border-box;
 }
 
-.layout-padding > * {
-
-  margin: 8px;
-}
+/*
+DRAG AND DROP CLASSES
+ */
 
 .scrollable {
-
   -webkit-overflow-scrolling: touch;
   overflow-x: auto;
   overflow-y: auto;
 }
 
 [draggable=true] {
-
   cursor: pointer;
 }
 
 [draggable].dndDraggableDisabled {
-
   cursor: not-allowed;
   opacity: .7;
 }
 
 [dndHandle] {
-
   display: inline-block;
   padding: 4px;
   border: 1px solid darkgray;
@@ -36,15 +30,13 @@
 
 [ng-reflect-dnd-dropzone],
 [dndDropzone] {
-  border: 1px red solid;
-  //min-width: 200px;
-  //min-height: 200px;
-  min-height: 20px;
+  //border: 1px red solid;
+  min-width: 20px;
+  min-height: 80px;
 }
 
 [ng-reflect-dnd-dropzone].dndDropzoneDisabled,
 [dndDropzone].dndDropzoneDisabled {
-
   cursor: no-drop;
   opacity: .7;
   border-color: gray;
@@ -52,6 +44,70 @@
 
 [ng-reflect-dnd-dropzone].dndDragover,
 [dndDropzone].dndDragover {
-
   border-color: green;
+}
+
+.dndDraggingSource {
+  opacity: .5;
+  transform: scale(.98);
+}
+
+
+/*
+WIREFRAME PAGE
+ */
+
+.bg-grid {
+  display: block;
+  position: fixed;
+  z-index: -1;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.bg-grid .container {
+  height: 100%;
+}
+
+.bg-grid .container .content {
+  height: 100%;
+  border-right: 1px dashed black;
+  border-left: 1px dashed black;
+}
+
+.element-section {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.element-section:nth-child(odd) {
+  background: rgba(50, 50, 50, .1);
+}
+
+.element-section:nth-child(even) {
+  background: rgba(200, 200, 200, .1);
+}
+
+.block {
+  border: 1px solid #CCC;
+  padding: 20px;
+
+  .block-icon {
+    display: inline-block;
+    margin: auto;
+    padding: 20px 25px;
+    border: 1px solid #666;
+    border-radius: 5px;
+  }
+}
+
+
+/*
+ELEMENTS CLASSES
+ */
+
+.element-column > * {
+  background: rgba(0,0,0,.05);
 }
