@@ -26,7 +26,6 @@
 
   <!-- page bottom: add section - later (maybe put this action inside section) -->
 
-  <pre>{{nestableList|json}}</pre>
 </div>
 
 
@@ -55,6 +54,7 @@
             class="dndPlaceholder"
             [ngClass]="getCommonChildCssClasses(parentType)"
   >
+<!--    Drop things here-->
   </mat-card>
 
   <div *ngFor="let item of list"
@@ -76,11 +76,14 @@
       <span class="glyphicon glyphicon-move"></span>
     </div>
 
-    <div *ngIf="item.type === 'block'" class="block">
-      <div class="block-icon">
-        Block {{ item?.originalElement?.settings?.blockType || 'default' }}
-        <span class="glyphicon glyphicon-text-size"></span>
-      </div>
+    <div *ngIf="item.type === 'columns'"
+         (click)="shuttleColumnsWidth(item)"
+         class="element-settings">
+      <span class="glyphicon glyphicon-edit"></span>
+    </div>
+
+    <div *ngIf="item.type === 'block'" class="block" [title]="item.originalElement.settings.blockType || 'default'">
+      <app-block-thumbnail [element]="item.originalElement"></app-block-thumbnail>
     </div>
 
     <div *ngIf="item.customDragImage"
@@ -93,7 +96,10 @@
          [dndDropzone]="getAcceptableChildrenTypes(item)"
          (dndDrop)="onDrop($event, item.children)">
 
-      <ng-container *ngTemplateOutlet="recursiveList; context:{ parentType: item.type, list: item.children }"></ng-container>
+      <ng-container
+        *ngTemplateOutlet="recursiveList; context:{ parentType: item.type, list: item.children }"></ng-container>
+
+      <div *ngIf="item.children.length === 0">Drop zone</div>
 
     </div>
 

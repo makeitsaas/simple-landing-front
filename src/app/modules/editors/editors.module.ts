@@ -13,6 +13,7 @@ import { BlockElementComponent } from './components/block-element/block-element.
 import { DynamicValueComponent } from './forms/inputs/dynamic-value/dynamic-value.component';
 import { DndModule } from 'ngx-drag-drop';
 import { MatCardModule, MatIconModule, MatSnackBarModule } from '@angular/material';
+import { BlockThumbnailComponent } from './components/block-thumbnail/block-thumbnail.component';
 
 @NgModule({
   imports: [
@@ -33,7 +34,8 @@ import { MatCardModule, MatIconModule, MatSnackBarModule } from '@angular/materi
     AutofocusDirective,
 
     BlockElementComponent,
-    DynamicValueComponent
+    DynamicValueComponent,
+    BlockThumbnailComponent
   ],
   providers: [
     HtmlElementsService

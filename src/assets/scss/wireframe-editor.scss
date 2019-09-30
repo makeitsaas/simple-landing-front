@@ -45,19 +45,6 @@ DRAG AND DROP CLASSES
   transform: scale(.98);
 }
 
-.drag-grip {
-  position: absolute;
-  top: 5px;
-  left: 3px;
-}
-
-.element-columns {
-  .drag-grip {
-    left: -5px;
-    z-index: 10;
-  }
-}
-
 
 /*
 WIREFRAME PAGE
@@ -100,12 +87,13 @@ WIREFRAME PAGE
   border: 1px solid #CCC;
   padding: 20px;
 
-  .block-icon {
-    display: inline-block;
+  .block-thumbnail {
+    //display: inline-block;
     margin: auto;
     padding: 20px 25px;
-    border: 1px solid #666;
+    border: 1px dashed #CCC;
     border-radius: 5px;
+    width: 200px;
   }
 }
 
@@ -120,4 +108,27 @@ ELEMENTS CLASSES
 
 .element-column > * {
   background: rgba(0,0,0,.05);
+}
+
+.drag-grip {
+  position: absolute;
+  top: 5px;
+  left: 3px;
+}
+
+.element-settings {
+  position: absolute;
+  top: 25px;
+  left: 3px;
+}
+
+.element-columns {
+  .drag-grip {
+    left: -5px;
+    z-index: 10;
+  }
+  .element-settings {
+    left: -5px;
+    z-index: 10;
+  }
 }

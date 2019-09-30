@@ -1,0 +1,26 @@
+$defaultRadius: 9px;
+$defaultTextHeight: 6px;
+
+.mock-text-line {
+  height: $defaultTextHeight;
+  width: 100%;
+  max-width: 100px;
+  background: #999;
+  border-radius: $defaultRadius;
+  margin: 0 auto 3px;
+}
+
+.mock-title {
+  height: $defaultTextHeight * 2;
+  width: 100%;
+  background: #666;
+  border-radius: $defaultRadius;
+}
+
+.mock-button {
+  display: inline-block;
+  height: $defaultTextHeight;
+  background: blue;
+  border-radius: $defaultRadius;
+  width: 20px;
+}

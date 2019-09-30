@@ -6,6 +6,7 @@ import { HtmlElementInterface, HtmlElementsService } from '../../services/html-e
 export interface NestableListItem {
   content: string;
   type: string;
+  cols?: number;
   originalElement?: HtmlElementInterface;
   cssClasses?: string;
   disable?: boolean;
@@ -17,6 +18,7 @@ export interface NestableListItem {
 const columnTemplate: NestableListItem = {
   content: 'New Column',
   type: 'column',
+  cols: 6,
   children: []
 };
 
@@ -116,6 +118,18 @@ export class WireframeEditorComponent implements OnInit {
       classes[`element-${item.type}`] = true;
     }
 
+    if (item.type === 'column') {
+      if (item.cols) {
+        classes[`col-md-${item.cols}`] = true;
+      } else {
+        classes['col-md-6'] = true;
+      }
+
+      // if (parentType === 'columns') {
+      //   classes['col-md-6'] = true;
+      // }
+    }
+
     return Object.assign(commonClasses, classes);
   }
 
@@ -128,10 +142,11 @@ export class WireframeEditorComponent implements OnInit {
       classes.container = true;
     }
 
-    if (parentType === 'columns') {
-      classes['col-md-6'] = true;
-    }
-
     return classes;
+  }
+
+  shuttleColumnsWidth(item: NestableListItem) {
+    console.log('shuttle');
+    item.children.forEach(child => child.cols = 2);
   }
 }

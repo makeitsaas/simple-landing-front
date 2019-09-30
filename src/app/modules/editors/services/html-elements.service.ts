@@ -10,6 +10,7 @@ const HTML_CALL_LIMIT = 10000;
 export interface HtmlElementInterface {
   id: string;
   type: string;
+  settings: any;
   parent?: HtmlElementInterface;
 }
 

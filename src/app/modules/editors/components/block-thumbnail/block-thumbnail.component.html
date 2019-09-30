@@ -1,0 +1,62 @@
+<div *ngIf="!element">Block</div>
+<div class="block-thumbnail" *ngIf="element">
+  <div [ngSwitch]="blockType">
+    <div *ngSwitchCase="'jumbotron'">
+      <div style="">
+        <ng-container *ngTemplateOutlet="titlePlaceholder"></ng-container>
+        <ng-container *ngTemplateOutlet="subtitlePlaceholder"></ng-container>
+        <ng-container *ngTemplateOutlet="buttonPlaceholder"></ng-container>
+      </div>
+    </div>
+    <div *ngSwitchCase="'title'">
+        <ng-container *ngTemplateOutlet="titlePlaceholder"></ng-container>
+        <ng-container *ngTemplateOutlet="subtitlePlaceholder"></ng-container>
+    </div>
+    <div *ngSwitchCase="'custom'">
+        <ng-container *ngTemplateOutlet="customPlaceholder"></ng-container>
+    </div>
+    <div *ngSwitchCase="'text-image'">
+      <div class="row">
+        <div class="col-md-6">
+          <ng-container *ngTemplateOutlet="imagePlaceholder"></ng-container>
+        </div>
+        <div class="col-md-6">
+          <ng-container *ngTemplateOutlet="paragraphPlaceholder"></ng-container>
+          <div style="text-align: left; line-height: 0">
+            <ng-container *ngTemplateOutlet="buttonPlaceholder"></ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngSwitchDefault>
+      <ng-container *ngTemplateOutlet="paragraphPlaceholder"></ng-container>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #paragraphPlaceholder>
+  <div class="mock-text-line"></div>
+  <div class="mock-text-line"></div>
+  <div class="mock-text-line"></div>
+</ng-template>
+
+<ng-template #buttonPlaceholder>
+  <div class="mock-button"></div>
+</ng-template>
+
+<ng-template #imagePlaceholder>
+  <img src="/assets/img/image-placeholder.png">
+</ng-template>
+
+<ng-template #titlePlaceholder>
+  <div class="mock-text-line mock-title" style="width: 80px;"></div>
+</ng-template>
+
+<ng-template #subtitlePlaceholder>
+  <div class="mock-text-line" style="width: 50px;"></div>
+</ng-template>
+
+<ng-template #customPlaceholder>
+  Custom
+</ng-template>
