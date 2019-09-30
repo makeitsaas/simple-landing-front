@@ -28,6 +28,11 @@ const columnTemplate: NestableListItem = {
 export class WireframeEditorComponent implements OnInit {
   store: NestableListItem[] = [
     {
+      content: 'New Section',
+      type: 'section',
+      children: []
+    },
+    {
       content: 'New Columns Group',
       type: 'columns',
       children: [columnTemplate, columnTemplate]
@@ -116,6 +121,8 @@ export class WireframeEditorComponent implements OnInit {
 
   getCommonChildCssClasses(parentType: string) {
     const classes: { [key: string]: boolean } = {};
+
+    classes.element = true;
 
     if (parentType === 'section') {
       classes.container = true;

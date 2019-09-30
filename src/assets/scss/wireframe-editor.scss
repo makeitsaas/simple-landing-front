@@ -21,13 +21,6 @@ DRAG AND DROP CLASSES
   opacity: .7;
 }
 
-[dndHandle] {
-  display: inline-block;
-  padding: 4px;
-  border: 1px solid darkgray;
-  border-radius: 50%;
-}
-
 [ng-reflect-dnd-dropzone],
 [dndDropzone] {
   //border: 1px red solid;
@@ -50,6 +43,19 @@ DRAG AND DROP CLASSES
 .dndDraggingSource {
   opacity: .5;
   transform: scale(.98);
+}
+
+.drag-grip {
+  position: absolute;
+  top: 5px;
+  left: 3px;
+}
+
+.element-columns {
+  .drag-grip {
+    left: -5px;
+    z-index: 10;
+  }
 }
 
 
@@ -107,6 +113,10 @@ WIREFRAME PAGE
 /*
 ELEMENTS CLASSES
  */
+
+.element {
+  position: relative;
+}
 
 .element-column > * {
   background: rgba(0,0,0,.05);

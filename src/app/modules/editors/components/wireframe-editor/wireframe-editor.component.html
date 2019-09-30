@@ -70,14 +70,15 @@
        (dndEnd)="onDragEnd($event)"
        [ngClass]="getElementCssClasses(item, parentType)">
 
-    <mat-icon *ngIf="item.handle"
-              mat-list-icon
-              dndHandle>drag_handle
-    </mat-icon>
+    <div *ngIf="item.type !== 'block' && item.type !== 'column'"
+         class="drag-grip"
+         dndHandle>
+      <span class="glyphicon glyphicon-move"></span>
+    </div>
 
     <div *ngIf="item.type === 'block'" class="block">
       <div class="block-icon">
-        Block {{ item.type }}
+        Block {{ item?.originalElement?.settings?.blockType || 'default' }}
         <span class="glyphicon glyphicon-text-size"></span>
       </div>
     </div>
