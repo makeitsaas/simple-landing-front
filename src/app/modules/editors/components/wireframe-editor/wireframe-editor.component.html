@@ -16,6 +16,20 @@
 
   </div>
 
+  <!-- header actions -->
+  <div style="position: fixed;top: 10px; right: 20px;z-index: 10">
+    <button class="btn btn-success pull-right" (click)="save()">Save</button>
+    <button class="btn btn-default pull-right" (click)="editForward()" style="margin: 0 5px;">
+      <i class="glyphicon glyphicon-share-alt small"></i>
+    </button>
+    <button class="btn btn-default pull-right" (click)="editBack()" style="transform: scaleX(-1);">
+      <i class="glyphicon glyphicon-share-alt small"></i>
+    </button>
+    <button class="btn btn-default pull-right" (click)="triggerProgrammaticReordering()" style="margin: 0 5px;">
+      <i class="glyphicon glyphicon-console small"></i>
+    </button>
+  </div>
+
   <!-- Actual page tree -->
   <div [dndDropzone]="['section']"
        (dndDrop)="onDrop($event, nestableList)">
@@ -82,7 +96,9 @@
       <span class="glyphicon glyphicon-edit"></span>
     </div>
 
-    <div *ngIf="item.type === 'block'" class="block" [title]="item.originalElement.settings.blockType || 'default'">
+    <div *ngIf="item.type === 'block'"
+         class="block-area"
+         [title]="item.originalElement?.settings?.blockType || 'default'">
       <app-block-thumbnail [element]="item.originalElement"></app-block-thumbnail>
     </div>
 

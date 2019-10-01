@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BaseEditorComponent } from './components/base-editor/base-editor.component';
 import { EditorsRoutingModule } from './editors-routing.module';
-import { HtmlElementsService } from './services/html-elements.service';
+import { HtmlElementDataService } from './services/html-element-data.service';
 import { FieldsEditorComponent } from './components/fields-editor/fields-editor.component';
 import { WireframeEditorComponent } from './components/wireframe-editor/wireframe-editor.component';
 import { InlineFieldComponent } from './forms/inputs/inline-field/inline-field.component';
@@ -14,6 +14,7 @@ import { DynamicValueComponent } from './forms/inputs/dynamic-value/dynamic-valu
 import { DndModule } from 'ngx-drag-drop';
 import { MatCardModule, MatIconModule, MatSnackBarModule } from '@angular/material';
 import { BlockThumbnailComponent } from './components/block-thumbnail/block-thumbnail.component';
+import { DndTreeService } from './services/dnd-tree.service';
 
 @NgModule({
   imports: [
@@ -38,7 +39,8 @@ import { BlockThumbnailComponent } from './components/block-thumbnail/block-thum
     BlockThumbnailComponent
   ],
   providers: [
-    HtmlElementsService
+    HtmlElementDataService,
+    DndTreeService
   ],
   entryComponents: [InlineFieldComponent]
 })

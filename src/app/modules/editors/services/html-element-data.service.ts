@@ -4,14 +4,16 @@ import { environment } from '@env';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AssetsInterface } from '../interfaces/assets.interface';
+import { NestableListItem } from './dnd-tree.service';
 
 const HTML_CALL_LIMIT = 10000;
 
-export interface HtmlElementInterface {
+export interface HtmlElementDataInterface {
   id: string;
   type: string;
   settings: any;
-  parent?: HtmlElementInterface;
+  customTemplate?: any;
+  parent?: HtmlElementDataInterface;
 }
 
 export interface IPageLayers {
@@ -21,7 +23,7 @@ export interface IPageLayers {
 }
 
 @Injectable()
-export class HtmlElementsService {
+export class HtmlElementDataService {
 
   private htmlCallCount = 0;
 
@@ -64,6 +66,29 @@ export class HtmlElementsService {
         return response;
       }));
   }
+
+  updateTree(pageId: string|number, topItem: NestableListItem) {
+    const relations = this.convertNestableToRelations(topItem);
+    console.log('relations', relations);
+    // todo : cas où c'est un nouveau parent
+  }
+
+  convertNestableToRelations(item: NestableListItem): any[] {
+    let relations = item.children.map((childItem, i) => {
+      return {
+        parentId: item.originalElement && item.originalElement.id,
+        position: i,
+        htmlElementDataId: childItem.originalElement && childItem.originalElement.id
+      };
+    });
+
+    item.children.forEach(childItem => {
+      relations = relations.concat(this.convertNestableToRelations(childItem));
+    });
+
+    return relations;
+  }
+
 
   getAcceptableChildrenTypes(parentType: string): string[] {
     switch (parentType) {
@@ -109,5 +134,5 @@ export class HtmlElementsService {
     if (this.htmlCallCount > HTML_CALL_LIMIT) {
       throw new Error('too many html calls (probably a recursive error)');
     }
-  };
+  }
 }

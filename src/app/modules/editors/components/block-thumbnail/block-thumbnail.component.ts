@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { HtmlElementInterface } from '../../services/html-elements.service';
+import { HtmlElementDataInterface } from '../../services/html-element-data.service';
 
 @Component({
   selector: 'app-block-thumbnail',
@@ -7,7 +7,7 @@ import { HtmlElementInterface } from '../../services/html-elements.service';
   styleUrls: ['./block-thumbnail.component.scss']
 })
 export class BlockThumbnailComponent implements OnInit{
-  @Input() element: HtmlElementInterface;
+  @Input() element: HtmlElementDataInterface;
 
   blockType: string;
 

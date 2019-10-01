@@ -1,19 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DndDropEvent, DropEffect } from 'ngx-drag-drop';
 import { MatSnackBar } from '@angular/material';
-import { HtmlElementInterface, HtmlElementsService } from '../../services/html-elements.service';
-
-export interface NestableListItem {
-  content: string;
-  type: string;
-  cols?: number;
-  originalElement?: HtmlElementInterface;
-  cssClasses?: string;
-  disable?: boolean;
-  handle?: boolean;
-  customDragImage?: boolean;
-  children?: NestableListItem[];
-}
+import { HtmlElementDataService } from '../../services/html-element-data.service';
+import { DndTreeService, NestableListItem } from '../../services/dnd-tree.service';
 
 const columnTemplate: NestableListItem = {
   content: 'New Column',
@@ -46,21 +35,43 @@ export class WireframeEditorComponent implements OnInit {
     }
   ];
   nestableList: NestableListItem[] = [];
+  structure: NestableListItem;
 
   private currentDraggableEvent: DragEvent;
   private currentDragEffectMsg: string;
+  private pageId = '1';
 
   constructor(
     private snackBarService: MatSnackBar,
-    private htmlElementsService: HtmlElementsService
+    private htmlElementsService: HtmlElementDataService,
+    private dndTreeService: DndTreeService
   ) {
   }
 
   ngOnInit() {
-    this.htmlElementsService.getPageStructure('1').subscribe(structure => {
+    this.htmlElementsService.getPageStructure(this.pageId).subscribe(structure => {
       console.log('structure', structure);
+      this.structure = structure;
       this.nestableList = structure.children;
     });
+  }
+
+  save() {
+    console.log('save', this.nestableList);
+    this.htmlElementsService.updateTree(this.pageId, this.structure);
+  }
+
+  editBack() {
+    console.log('editBack');
+  }
+
+  editForward() {
+    console.log('editForward');
+  }
+
+  triggerProgrammaticReordering() {
+    console.log('programmatic reordering');
+    this.dndTreeService.moveElement(this.nestableList[1].children[3].originalElement, this.nestableList[0].originalElement, this.structure);
   }
 
   onDragStart(event: DragEvent) {
@@ -147,6 +158,6 @@ export class WireframeEditorComponent implements OnInit {
 
   shuttleColumnsWidth(item: NestableListItem) {
     console.log('shuttle');
-    item.children.forEach(child => child.cols = 2);
+    item.children.forEach(child => child.cols = child.cols === 2 ? 6 : 2);
   }
 }

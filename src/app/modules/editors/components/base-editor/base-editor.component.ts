@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { HtmlElementsService } from '../../services/html-elements.service';
+import { HtmlElementDataService } from '../../services/html-element-data.service';
 
 @Component({
   templateUrl: './base-editor.component.html',
   styleUrls: ['./base-editor.component.scss']
 })
 export class BaseEditorComponent implements OnInit {
-  constructor(private htmlElementsService: HtmlElementsService) {
+  constructor(private htmlElementsService: HtmlElementDataService) {
   }
 
   ngOnInit() {

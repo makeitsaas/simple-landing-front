@@ -13,7 +13,7 @@ DRAG AND DROP CLASSES
 }
 
 [draggable=true] {
-  cursor: pointer;
+  //cursor: pointer;
 }
 
 [draggable].dndDraggableDisabled {
@@ -83,7 +83,7 @@ WIREFRAME PAGE
   background: rgba(200, 200, 200, .1);
 }
 
-.block {
+.block-area {
   border: 1px solid #CCC;
   padding: 20px;
 
