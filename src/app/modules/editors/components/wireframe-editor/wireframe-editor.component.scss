@@ -1,0 +1,15 @@
+.store {
+  padding: 10px 10px;
+  background: #FFF;
+
+  .store-item {
+    display: inline-block;
+    padding: 5px 12px;
+    margin: 0 5px;
+    border: 1px solid #CCC;
+    background: #FFF;
+    border-radius: 10px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+}

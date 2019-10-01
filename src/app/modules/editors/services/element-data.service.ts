@@ -8,14 +8,6 @@ import { NestableListItem } from './dnd-tree.service';
 
 const HTML_CALL_LIMIT = 10000;
 
-export interface HtmlElementDataInterface {
-  id: string;
-  type: string;
-  settings: any;
-  customTemplate?: any;
-  parent?: HtmlElementDataInterface;
-}
-
 export interface IPageLayers {
   styles: AssetsInterface[];
   contentHtml: string;
@@ -23,7 +15,7 @@ export interface IPageLayers {
 }
 
 @Injectable()
-export class HtmlElementDataService {
+export class ElementDataService {
 
   private htmlCallCount = 0;
 
@@ -33,13 +25,13 @@ export class HtmlElementDataService {
   }
 
   getPageElements(pageId: string): Observable<any[]> {
-    return this.http.get(environment.APIUrl + '/pages/1/elements').pipe(map((response: any) => {
+    return this.http.get(environment.APIUrl + `/pages/${pageId}/elements`).pipe(map((response: any) => {
       return response.payload;
     }));
   }
 
   getPageLayers(pageId: string): Observable<IPageLayers> {
-    return this.http.get(environment.APIUrl + '/pages/1/layers').pipe(map((response: any) => {
+    return this.http.get(environment.APIUrl + `/pages/${pageId}/layers`).pipe(map((response: any) => {
       return response;
     }));
   }
@@ -67,7 +59,7 @@ export class HtmlElementDataService {
       }));
   }
 
-  updateTree(pageId: string|number, topItem: NestableListItem) {
+  updateTree(pageId: string | number, topItem: NestableListItem) {
     const relations = this.convertNestableToRelations(topItem);
     console.log('relations', relations);
     // todo : cas où c'est un nouveau parent

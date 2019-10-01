@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { DndDropEvent, DropEffect } from 'ngx-drag-drop';
 import { MatSnackBar } from '@angular/material';
-import { HtmlElementDataService } from '../../services/html-element-data.service';
+import { ElementDataService } from '../../services/element-data.service';
 import { DndTreeService, NestableListItem } from '../../services/dnd-tree.service';
+import { ElementDataInterface } from '../../entities/element-data';
 
 const columnTemplate: NestableListItem = {
   content: 'New Column',
@@ -19,17 +20,17 @@ const columnTemplate: NestableListItem = {
 export class WireframeEditorComponent implements OnInit {
   store: NestableListItem[] = [
     {
-      content: 'New Section',
+      content: 'Section',
       type: 'section',
       children: []
     },
     {
-      content: 'New Columns Group',
+      content: 'Columns',
       type: 'columns',
       children: [columnTemplate, columnTemplate]
     },
     {
-      content: 'New block',
+      content: 'Block',
       type: 'block',
       children: []
     }
@@ -43,7 +44,7 @@ export class WireframeEditorComponent implements OnInit {
 
   constructor(
     private snackBarService: MatSnackBar,
-    private htmlElementsService: HtmlElementDataService,
+    private htmlElementsService: ElementDataService,
     private dndTreeService: DndTreeService
   ) {
   }
@@ -71,7 +72,16 @@ export class WireframeEditorComponent implements OnInit {
 
   triggerProgrammaticReordering() {
     console.log('programmatic reordering');
-    this.dndTreeService.moveElement(this.nestableList[1].children[3].originalElement, this.nestableList[0].originalElement, this.structure);
+    const el = this.nestableList[1].children[3].originalElement;
+    const newParent = this.nestableList[0].originalElement;
+    const newPosition = 1;
+    this.dndTreeService.moveElement(el, newParent, newPosition, this.structure);
+  }
+
+  toggleContainer(element: ElementDataInterface) {
+    if (element) {
+      element.fields.container = element.fields.container === 'fluid' ? null : 'fluid';
+    }
   }
 
   onDragStart(event: DragEvent) {
@@ -135,10 +145,14 @@ export class WireframeEditorComponent implements OnInit {
       } else {
         classes['col-md-6'] = true;
       }
+    }
 
-      // if (parentType === 'columns') {
-      //   classes['col-md-6'] = true;
-      // }
+    if (parentType === 'section') {
+      if (item.originalElement && item.originalElement.fields.container === 'fluid') {
+        classes['container-fluid'] = true;
+      } else {
+        classes.container = true;
+      }
     }
 
     return Object.assign(commonClasses, classes);
@@ -149,15 +163,10 @@ export class WireframeEditorComponent implements OnInit {
 
     classes.element = true;
 
-    if (parentType === 'section') {
-      classes.container = true;
-    }
-
     return classes;
   }
 
   shuttleColumnsWidth(item: NestableListItem) {
-    console.log('shuttle');
     item.children.forEach(child => child.cols = child.cols === 2 ? 6 : 2);
   }
 }

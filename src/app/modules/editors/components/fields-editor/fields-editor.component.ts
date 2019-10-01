@@ -1,5 +1,5 @@
 import { AfterViewInit, Compiler, Component, ComponentFactoryResolver, NgModule, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { HtmlElementDataService, IPageLayers } from '../../services/html-element-data.service';
+import { ElementDataService, IPageLayers } from '../../services/element-data.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InlineFieldComponent } from '../../forms/inputs/inline-field/inline-field.component';
@@ -19,7 +19,7 @@ export class FieldsEditorComponent implements OnInit, AfterViewInit {
   stylesUrl: SafeResourceUrl[] = [];
 
   constructor(
-    private htmlElementsService: HtmlElementDataService,
+    private htmlElementsService: ElementDataService,
     private componentFactoryResolver: ComponentFactoryResolver,
     private compiler: Compiler,
     private sanitizer: DomSanitizer

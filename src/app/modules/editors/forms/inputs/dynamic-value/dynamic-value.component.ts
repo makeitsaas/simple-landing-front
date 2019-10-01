@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { HtmlElementDataService } from '../../../services/html-element-data.service';
+import { ElementDataService } from '../../../services/element-data.service';
 
 @Component({
   selector: 'dynamic-value',
@@ -14,7 +14,7 @@ export class DynamicValueComponent implements OnInit {
 
   constructor(
     private el: ElementRef,
-    private htmlElementsService: HtmlElementDataService
+    private htmlElementsService: ElementDataService
   ) {
   }
 

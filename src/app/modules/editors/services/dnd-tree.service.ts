@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HtmlElementDataInterface } from './html-element-data.service';
+import { ElementDataInterface } from '../entities/element-data';
 
 interface ElementNestedLocation {
   nestedItem?: NestableListItem;
@@ -10,7 +10,7 @@ export interface NestableListItem {
   content: string;
   type: string;
   cols?: number;
-  originalElement?: HtmlElementDataInterface;
+  originalElement?: ElementDataInterface;
   cssClasses?: string;
   disable?: boolean;
   handle?: boolean;
@@ -20,7 +20,7 @@ export interface NestableListItem {
 
 @Injectable()
 export class DndTreeService {
-  moveElement(element: HtmlElementDataInterface, newParentElement: HtmlElementDataInterface, tree: NestableListItem) {
+  moveElement(element: ElementDataInterface, newParentElement: ElementDataInterface, newPosition: number, tree: NestableListItem) {
     const parentLocation = this.findNestedItem(newParentElement, tree);
     const newNestedParent = parentLocation.nestedItem;
 
@@ -34,10 +34,10 @@ export class DndTreeService {
       throw new Error('element cannot be found');
     }
 
-    this.placeElement(nestedItem, newNestedParent, 1);
+    this.placeElement(nestedItem, newNestedParent, newPosition);
   }
 
-  findAndRemoveNestedItem(element: HtmlElementDataInterface, tree: NestableListItem): NestableListItem | void {
+  findAndRemoveNestedItem(element: ElementDataInterface, tree: NestableListItem): NestableListItem | void {
     const {nestedItem, nestedParent} = this.findNestedItem(element, tree);
     if (nestedItem && nestedParent) {
       const index = nestedParent.children.indexOf(nestedItem);
@@ -45,7 +45,7 @@ export class DndTreeService {
     }
   }
 
-  findNestedItem(element: HtmlElementDataInterface, tree: NestableListItem): ElementNestedLocation {
+  findNestedItem(element: ElementDataInterface, tree: NestableListItem): ElementNestedLocation {
     for (const child of tree.children) {
       if (child.originalElement === element) {
         // const index = tree.children.indexOf(child);

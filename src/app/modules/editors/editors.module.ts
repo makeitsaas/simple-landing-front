@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BaseEditorComponent } from './components/base-editor/base-editor.component';
 import { EditorsRoutingModule } from './editors-routing.module';
-import { HtmlElementDataService } from './services/html-element-data.service';
+import { ElementDataService } from './services/element-data.service';
 import { FieldsEditorComponent } from './components/fields-editor/fields-editor.component';
 import { WireframeEditorComponent } from './components/wireframe-editor/wireframe-editor.component';
 import { InlineFieldComponent } from './forms/inputs/inline-field/inline-field.component';
@@ -39,7 +39,7 @@ import { DndTreeService } from './services/dnd-tree.service';
     BlockThumbnailComponent
   ],
   providers: [
-    HtmlElementDataService,
+    ElementDataService,
     DndTreeService
   ],
   entryComponents: [InlineFieldComponent]
