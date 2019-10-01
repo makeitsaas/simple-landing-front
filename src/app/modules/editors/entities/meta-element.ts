@@ -17,10 +17,6 @@ MetaElement Vs ElementData :
 import { ElementData } from './element-data';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-class MetaElementData {
-  readonly type: string;
-}
-
 class FieldChange {
   key: string;
   value: any;
@@ -33,23 +29,30 @@ class TranslationChange {
 }
 
 class LocationChange {
-  newPosition: number;
-  newParent: MetaElement;
+  newPosition?: number;
+  newParent?: MetaElement;
 }
 
 export class MetaElement {
   private currentLang = 'en';
   private locationChangeSubject = new BehaviorSubject<LocationChange>(null);
-  private fieldChangeSubject = new BehaviorSubject(null);
-  private translationChangeSubject = new BehaviorSubject(null);
+  private fieldChangeSubject = new BehaviorSubject<FieldChange>(null);
+  private translationChangeSubject = new BehaviorSubject<TranslationChange>(null);
 
-  data: MetaElementData;
-  onLocationChange: Observable<any> = this.locationChangeSubject.asObservable();
-  onFieldChange: Observable<any> = this.fieldChangeSubject.asObservable();
-  onTranslationChange: Observable<any> = this.translationChangeSubject.asObservable();
+  data: ElementData;  // preferably immutable
+  onLocationChange: Observable<LocationChange> = this.locationChangeSubject.asObservable();
+  onFieldChange: Observable<FieldChange> = this.fieldChangeSubject.asObservable();
+  onTranslationChange: Observable<TranslationChange> = this.translationChangeSubject.asObservable();
 
   constructor(data: ElementData | any = {}) {
-
+    if (data instanceof ElementData) {
+      this.data = data;
+    } else {
+      this.data = new ElementData(data);
+      if (this.data.parent) {
+        console.log('this element has initial parent', this.data.id);
+      }
+    }
   }
 
   /*

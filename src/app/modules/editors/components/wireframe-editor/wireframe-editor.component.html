@@ -36,9 +36,9 @@
 
   <!-- Actual page tree -->
   <div [dndDropzone]="['section']"
-       (dndDrop)="onDrop($event, nestableList)">
+       (dndDrop)="onDrop($event, pageTree.children)">
 
-    <ng-container *ngTemplateOutlet="recursiveList; context:{ parentType: 'page', list: nestableList }"></ng-container>
+    <ng-container *ngTemplateOutlet="recursiveList; context:{ parentType: 'page', list: pageTree?.children }"></ng-container>
 
   </div>
 
@@ -95,17 +95,19 @@
     </div>
 
     <div *ngIf="item.type === 'columns'"
-         (click)="shuttleColumnsWidth(item)"
+         (click)="toggleColumnsWidth(item)"
          class="element-settings">
       <span class="glyphicon glyphicon-edit"></span>
     </div>
 
     <div *ngIf="item.type === 'block'"
          class="block-area"
-         [title]="item.originalElement?.settings?.blockType || 'default'"
-          (click)="toggleContainer(item.originalElement)">
-      <app-block-thumbnail [element]="item.originalElement"></app-block-thumbnail>
+         [title]="item.metaElement.data.settings.blockType || 'default'"
+         (click)="toggleContainer(item.metaElement)">
+      <app-block-thumbnail [element]="item.metaElement"></app-block-thumbnail>
     </div>
+
+    <pre *ngIf="item.type === 'column'">{{item.metaElement.data|json}}</pre>
 
     <div *ngIf="item.customDragImage"
          dndDragImageRef>MY_CUSTOM_DRAG_IMAGE

@@ -15,6 +15,7 @@ import { DndModule } from 'ngx-drag-drop';
 import { MatCardModule, MatIconModule, MatSnackBarModule } from '@angular/material';
 import { BlockThumbnailComponent } from './components/block-thumbnail/block-thumbnail.component';
 import { DndTreeService } from './services/dnd-tree.service';
+import { MetaElementStore } from './services/meta-element.store';
 
 @NgModule({
   imports: [
@@ -33,14 +34,14 @@ import { DndTreeService } from './services/dnd-tree.service';
     InlineFieldComponent,
     EditInputComponent,
     AutofocusDirective,
-
     BlockElementComponent,
     DynamicValueComponent,
     BlockThumbnailComponent
   ],
   providers: [
     ElementDataService,
-    DndTreeService
+    DndTreeService,
+    MetaElementStore
   ],
   entryComponents: [InlineFieldComponent]
 })

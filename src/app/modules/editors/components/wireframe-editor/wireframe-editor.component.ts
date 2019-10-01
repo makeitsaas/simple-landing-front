@@ -2,15 +2,40 @@ import { Component, OnInit } from '@angular/core';
 import { DndDropEvent, DropEffect } from 'ngx-drag-drop';
 import { MatSnackBar } from '@angular/material';
 import { ElementDataService } from '../../services/element-data.service';
-import { DndTreeService, NestableListItem } from '../../services/dnd-tree.service';
+import {
+  DndTreeService,
+  DnDItem,
+  DnDItemTemplate
+} from '../../services/dnd-tree.service';
 import { ElementDataInterface } from '../../entities/element-data';
+import { MetaElement } from '../../entities/meta-element';
+import { MetaElementStore } from '../../services/meta-element.store';
 
-const columnTemplate: NestableListItem = {
+// est-ce que c'était une bonne idée de passer l'interface en classe ? put**n
+const columnTemplate: DnDItemTemplate = {
   content: 'New Column',
   type: 'column',
   cols: 6,
   children: []
 };
+
+const templatesList: DnDItemTemplate[] = [
+  {
+    content: 'Section',
+    type: 'section',
+    children: []
+  },
+  {
+    content: 'Columns',
+    type: 'columns',
+    children: [columnTemplate, columnTemplate]
+  },
+  {
+    content: 'Block',
+    type: 'block',
+    children: []
+  },
+];
 
 @Component({
   selector: 'wireframe-editor',
@@ -18,25 +43,8 @@ const columnTemplate: NestableListItem = {
   styleUrls: ['wireframe-editor.component.scss']
 })
 export class WireframeEditorComponent implements OnInit {
-  store: NestableListItem[] = [
-    {
-      content: 'Section',
-      type: 'section',
-      children: []
-    },
-    {
-      content: 'Columns',
-      type: 'columns',
-      children: [columnTemplate, columnTemplate]
-    },
-    {
-      content: 'Block',
-      type: 'block',
-      children: []
-    }
-  ];
-  nestableList: NestableListItem[] = [];
-  structure: NestableListItem;
+  store: DnDItemTemplate[] = templatesList;
+  pageTree: DnDItem;
 
   private currentDraggableEvent: DragEvent;
   private currentDragEffectMsg: string;
@@ -45,21 +53,21 @@ export class WireframeEditorComponent implements OnInit {
   constructor(
     private snackBarService: MatSnackBar,
     private htmlElementsService: ElementDataService,
-    private dndTreeService: DndTreeService
+    private dndTreeService: DndTreeService,
+    private metaElementStore: MetaElementStore
   ) {
   }
 
   ngOnInit() {
-    this.htmlElementsService.getPageStructure(this.pageId).subscribe(structure => {
-      console.log('structure', structure);
-      this.structure = structure;
-      this.nestableList = structure.children;
+    this.dndTreeService.getPageTree(this.pageId).subscribe(pageTree => {
+      console.log('pageTree', pageTree);
+      this.pageTree = pageTree;
     });
   }
 
   save() {
-    console.log('save', this.nestableList);
-    this.htmlElementsService.updateTree(this.pageId, this.structure);
+    console.log('save', this.pageTree.children);
+    this.htmlElementsService.updateTree(this.pageId, this.pageTree);
   }
 
   editBack() {
@@ -71,17 +79,21 @@ export class WireframeEditorComponent implements OnInit {
   }
 
   triggerProgrammaticReordering() {
-    console.log('programmatic reordering');
-    const el = this.nestableList[1].children[3].originalElement;
-    const newParent = this.nestableList[0].originalElement;
+    const el = this.pageTree.children[1].children[3].metaElement;
+    const newParent = this.pageTree.children[0].metaElement;
     const newPosition = 1;
-    this.dndTreeService.moveElement(el, newParent, newPosition, this.structure);
+    this.dndTreeService.moveElement(el, newParent, newPosition, this.pageTree);
   }
 
-  toggleContainer(element: ElementDataInterface) {
+  toggleContainer(element: MetaElement) {
     if (element) {
-      element.fields.container = element.fields.container === 'fluid' ? null : 'fluid';
+      alert('todo : update using reactive programming');
+      // element.fields.container = element.fields.container === 'fluid' ? null : 'fluid';
     }
+  }
+
+  toggleColumnsWidth(item: DnDItem) {
+    item.children.forEach(child => child.cols = child.cols === 2 ? 6 : 2);
   }
 
   onDragStart(event: DragEvent) {
@@ -109,26 +121,42 @@ export class WireframeEditorComponent implements OnInit {
   }
 
   onDrop(event: DndDropEvent, list?: any[]) {
+    console.log('onDrop', 1);
     if (list
       && (event.dropEffect === 'copy'
         || event.dropEffect === 'move')) {
 
+      console.log('onDrop', 2);
       let index = event.index;
 
       if (typeof index === 'undefined') {
-
         index = list.length;
       }
 
-      list.splice(index, 0, event.data);
+      console.log(event.data);
+
+      const newItem: DnDItem = event.data;
+      if (!newItem.metaElement) {
+        newItem.metaElement = this.metaElementStore.getNewMetaElement(event.data);
+        if (event.data.children) {
+          newItem.children = event.data.children.map(child => {
+            return {
+              ...child,
+              metaElement: this.metaElementStore.getNewMetaElement(child)
+            };
+          });
+        }
+      }
+
+      list.splice(index, 0, newItem);
     }
   }
 
-  getAcceptableChildrenTypes(item: NestableListItem) {
+  getAcceptableChildrenTypes(item: DnDItem) {
     return this.htmlElementsService.getAcceptableChildrenTypes(item.type);
   }
 
-  getElementCssClasses(item: NestableListItem, parentType: string) {
+  getElementCssClasses(item: DnDItem, parentType: string) {
     const classes: { [key: string]: boolean } = {};
     const commonClasses = this.getCommonChildCssClasses(parentType);
 
@@ -148,7 +176,7 @@ export class WireframeEditorComponent implements OnInit {
     }
 
     if (parentType === 'section') {
-      if (item.originalElement && item.originalElement.fields.container === 'fluid') {
+      if (item.metaElement.data.fields.container === 'fluid') {
         classes['container-fluid'] = true;
       } else {
         classes.container = true;
@@ -164,9 +192,5 @@ export class WireframeEditorComponent implements OnInit {
     classes.element = true;
 
     return classes;
-  }
-
-  shuttleColumnsWidth(item: NestableListItem) {
-    item.children.forEach(child => child.cols = child.cols === 2 ? 6 : 2);
   }
 }
