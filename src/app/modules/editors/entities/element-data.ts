@@ -14,7 +14,7 @@ export class ElementData implements ElementDataInterface {
   readonly id: string;
   readonly type: string;
   readonly settings: any = {};
-  readonly fields: any = {};
+  readonly fields: {readonly [key: string]: any} = {};
   readonly translations: any = {};
   readonly css: string = '';
   readonly position: number = 0;
@@ -23,5 +23,9 @@ export class ElementData implements ElementDataInterface {
 
   constructor(options: any = {}) {
     Object.assign(this, options);
+  }
+
+  asObject(): any {
+    return Object.assign({}, this);
   }
 }

@@ -9,7 +9,8 @@ import {
 } from '../../services/dnd-tree.service';
 import { ElementDataInterface } from '../../entities/element-data';
 import { MetaElement } from '../../entities/meta-element';
-import { MetaElementStore } from '../../services/meta-element.store';
+import { MetaElementStoreService } from '../../services/meta-element-store.service';
+import { Observable } from 'rxjs';
 
 // est-ce que c'était une bonne idée de passer l'interface en classe ? put**n
 const columnTemplate: DnDItemTemplate = {
@@ -43,26 +44,31 @@ const templatesList: DnDItemTemplate[] = [
   styleUrls: ['wireframe-editor.component.scss']
 })
 export class WireframeEditorComponent implements OnInit {
-  store: DnDItemTemplate[] = templatesList;
+  itemTemplates: DnDItemTemplate[] = templatesList;
   pageTree: DnDItem;
 
   private currentDraggableEvent: DragEvent;
   private currentDragEffectMsg: string;
   private pageId = '1';
+  private watchers: { [key: number]: Observable<any> } = {};
+  private currentDragItem: DnDItem | void;
+  canGoPrev = false;
+  canGoNext = false;
 
   constructor(
     private snackBarService: MatSnackBar,
     private htmlElementsService: ElementDataService,
     private dndTreeService: DndTreeService,
-    private metaElementStore: MetaElementStore
+    private metaElementStore: MetaElementStoreService
   ) {
   }
 
   ngOnInit() {
     this.dndTreeService.getPageTree(this.pageId).subscribe(pageTree => {
-      console.log('pageTree', pageTree);
       this.pageTree = pageTree;
+      this.dndTreeService.afterSetupCleanPositions(this.pageTree);
     });
+    this.metaElementStore.treeChange.subscribe(element => this.onElementLocation(element));
   }
 
   save() {
@@ -71,34 +77,34 @@ export class WireframeEditorComponent implements OnInit {
   }
 
   editBack() {
-    console.log('editBack');
+    this.metaElementStore.goPrev();
+    this.canGoPrev = this.metaElementStore.canGoPrev();
+    this.canGoNext = this.metaElementStore.canGoNext();
   }
 
   editForward() {
-    console.log('editForward');
+    this.metaElementStore.goNext();
+    this.canGoPrev = this.metaElementStore.canGoPrev();
+    this.canGoNext = this.metaElementStore.canGoNext();
   }
 
-  triggerProgrammaticReordering() {
-    const el = this.pageTree.children[1].children[3].metaElement;
-    const newParent = this.pageTree.children[0].metaElement;
-    const newPosition = 1;
-    this.dndTreeService.moveElement(el, newParent, newPosition, this.pageTree);
+  triggerProgrammaticAction() {
+    console.log('nothing yet');
   }
 
   toggleContainer(element: MetaElement) {
-    if (element) {
-      alert('todo : update using reactive programming');
-      // element.fields.container = element.fields.container === 'fluid' ? null : 'fluid';
-    }
+    element.setField('container', element.data.fields.container === 'fluid' ? null : 'fluid');
   }
 
   toggleColumnsWidth(item: DnDItem) {
     item.children.forEach(child => child.cols = child.cols === 2 ? 6 : 2);
   }
 
-  onDragStart(event: DragEvent) {
+  onDragStart(event: DragEvent, originalItem?: DnDItem) {
     this.currentDragEffectMsg = '';
     this.currentDraggableEvent = event;
+
+    this.currentDragItem = originalItem;
 
     this.snackBarService.dismiss();
     this.snackBarService.open('Drag started!', undefined, {duration: 2000});
@@ -106,50 +112,54 @@ export class WireframeEditorComponent implements OnInit {
 
   onDragged(item: any, list: any[], effect: DropEffect) {
     this.currentDragEffectMsg = `Drag ended with effect "${effect}"!`;
-
     if (effect === 'move') {
-
       const index = list.indexOf(item);
       list.splice(index, 1);
     }
   }
 
-  onDragEnd(event: DragEvent) {
+  onDragEnd(event: DragEvent, originalItem?: DnDItem) {
+    this.currentDragItem = null;
     this.currentDraggableEvent = event;
     this.snackBarService.dismiss();
     this.snackBarService.open(this.currentDragEffectMsg || `Drag ended!`, undefined, {duration: 2000});
   }
 
-  onDrop(event: DndDropEvent, list?: any[]) {
-    console.log('onDrop', 1);
-    if (list
-      && (event.dropEffect === 'copy'
-        || event.dropEffect === 'move')) {
+  onDrop(event: DndDropEvent, list: DnDItem[]) {
+    console.log('onDrop');
+    if (['copy', 'move'].indexOf(event.dropEffect) !== -1) {
+      const index = isNaN(event.index) ? list.length : event.index;
+      const clonedDnDItem: DnDItem = event.data;
+      const boundDndItem = this.dndTreeService.bindMetaElement(clonedDnDItem);
 
-      console.log('onDrop', 2);
-      let index = event.index;
+      list.splice(index, 0, boundDndItem);
 
-      if (typeof index === 'undefined') {
-        index = list.length;
-      }
+      // logical position, ignoring temporary or copied items
+      const logicalPosition = list.slice(0, index).filter(item => {
+        console.log('item', item);
+        return true;
+      }).length;
 
-      console.log(event.data);
-
-      const newItem: DnDItem = event.data;
-      if (!newItem.metaElement) {
-        newItem.metaElement = this.metaElementStore.getNewMetaElement(event.data);
-        if (event.data.children) {
-          newItem.children = event.data.children.map(child => {
-            return {
-              ...child,
-              metaElement: this.metaElementStore.getNewMetaElement(child)
-            };
-          });
-        }
-      }
-
-      list.splice(index, 0, newItem);
+      // DnD Tree is changed, tell MetaElement he has changed position
+      const ignoreList = this.currentDragItem ? [this.currentDragItem] : [];
+      const {nestedItem, nestedParent} = this.dndTreeService.findNestedItem(boundDndItem.metaElement, this.pageTree, ignoreList);
+      boundDndItem.metaElement.setTreeLocation(nestedParent.metaElement, logicalPosition);
+      this.currentDragItem = null;
     }
+  }
+
+  onElementLocation(metaElement: MetaElement) {
+    const ignoreList = this.currentDragItem ? [this.currentDragItem] : [];
+    const {nestedItem, nestedParent} = this.dndTreeService.findNestedItem(metaElement, this.pageTree, ignoreList);
+    const parentHasChanged = nestedParent.metaElement.localId !== metaElement.treeLocation.parentMetaElementId;
+    const positionHasChanged = nestedParent.children.indexOf(nestedItem) !== metaElement.treeLocation.position;
+    if (parentHasChanged || positionHasChanged) {
+      console.log('onElementLocation => move element', metaElement.treeLocation, this.currentDragItem);
+      this.dndTreeService.moveElement(metaElement, this.pageTree);
+    } else {
+      console.log('onElementLocation => nothing to do', metaElement.treeLocation, this.currentDragItem);
+    }
+    this.dndTreeService.afterSetupCleanPositions(nestedParent);
   }
 
   getAcceptableChildrenTypes(item: DnDItem) {

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { ElementDataInterface } from '../entities/element-data';
 import { MetaElement } from '../entities/meta-element';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { MetaElementStore } from './meta-element.store';
+import { MetaElementStoreService } from './meta-element-store.service';
+import { MetaElementStore } from '../store/meta-element.store';
 
 const HTML_CALL_LIMIT = 10000;
 
@@ -13,15 +13,22 @@ interface ElementNestedLocation {
 }
 
 export interface DnDItem {
-  content: string;
-  type: string;
-  cols?: number;
-  metaElement: MetaElement;
-  cssClasses?: string;
+  // primary dnd features
+  children?: DnDItem[];       // nested relations
+  metaElement: MetaElement;   // real content
+
+  // secondary dnd features
   disable?: boolean;
   handle?: boolean;
   customDragImage?: boolean;
-  children?: DnDItem[];
+
+  // convenience display features
+  content: string;            // short name
+  type: string;               // display type
+
+  // unnecessary display features (see metaElement)
+  cols?: number;
+  cssClasses?: string;
 }
 
 export interface DnDItemTemplate {
@@ -37,7 +44,7 @@ export class DndTreeService {
   private htmlCallCount = 0;
 
   constructor(
-    private metaElementStore: MetaElementStore
+    private metaElementStore: MetaElementStoreService
   ) {
   }
 
@@ -56,6 +63,95 @@ export class DndTreeService {
     }));
   }
 
+  moveElement(element: MetaElement, tree: DnDItem) {
+    const targetParentElement = MetaElementStore.findMetaByLocalId(element.treeLocation.parentMetaElementId);
+    const newPosition = element.treeLocation.position;
+
+    if (!targetParentElement) {
+      throw new Error('no parent');
+    }
+
+    // const targetParentItem = this.findNestedItem(targetParentElement, tree);
+    // const targetParentDnDItem = targetParentItem.nestedItem;
+
+    const {nestedItem: targetParentDnDItem} = this.findNestedItem(targetParentElement, tree);
+
+    if (!targetParentDnDItem) {
+      console.log('target parent MetaElement', targetParentElement);
+      throw new Error('new parent cannot be found');
+    }
+
+    const nestedItem = this.findAndRemoveNestedItem(element, tree);
+
+    if (!nestedItem) {
+      throw new Error('element cannot be found');
+    }
+
+    this.placeElement(nestedItem, targetParentDnDItem, newPosition);
+  }
+
+  findAndRemoveNestedItem(element: MetaElement, tree: DnDItem): DnDItem | void {
+    const {nestedItem, nestedParent} = this.findNestedItem(element, tree);
+    if (nestedItem && nestedParent) {
+      const index = nestedParent.children.indexOf(nestedItem);
+      console.log('splice', nestedParent, index);
+      return nestedParent.children.splice(index, 1)[0];
+    }
+  }
+
+  findNestedItem(element: MetaElement, tree: DnDItem, ignoreList: DnDItem[] = []): ElementNestedLocation {
+    if (tree.metaElement === element && ignoreList.indexOf(tree) === -1) {
+      return {
+        nestedItem: tree,
+        nestedParent: null
+      };
+    }
+
+    for (const child of tree.children) {
+      if ((child.metaElement === element) && (ignoreList.indexOf(child) === -1)) {
+        return {
+          nestedItem: child,
+          nestedParent: tree
+        };
+      } else {
+        const nestedLocation = this.findNestedItem(element, child, ignoreList);
+
+        if (nestedLocation && nestedLocation.nestedItem) {
+          return nestedLocation;
+        }
+      }
+    }
+
+    return {};
+  }
+
+  placeElement(nestedItem: DnDItem, nestedParent: DnDItem, position: number) {
+    nestedParent.children.splice(position, 0, nestedItem);
+  }
+
+  bindMetaElement(dndItem: any): DnDItem {
+    if (!dndItem.metaElement) {
+      // item comes from a DndItemTemplate => create new MetaElements for it and its children
+      dndItem.metaElement = this.metaElementStore.getNewMetaElement(dndItem);
+
+    } else if (!(dndItem.metaElement instanceof MetaElement)) {
+      // item comes from a DnDItem, but has been cloned => rebind recursively MetaElements
+      dndItem.metaElement = this.metaElementStore.findMetaByLocalId(dndItem.metaElement.localId);
+    }
+
+    dndItem.children = dndItem.children.map(child => this.bindMetaElement(child));
+    this.afterSetupCleanPositions(dndItem);
+
+    return dndItem;
+  }
+
+  afterSetupCleanPositions(tree: DnDItem) {
+    tree.children.map((child, i) => {
+        child.metaElement.setCleanedPosition(i);
+        this.afterSetupCleanPositions(child);
+    });
+  }
+
   /*
 
     Private Methods
@@ -63,7 +159,6 @@ export class DndTreeService {
    */
 
   private populateAsDraggableChildren(element: MetaElement, elements: MetaElement[]): DnDItem {
-
     const dragItem: any = this.transformElementAsDraggable(element);
     dragItem.children = elements
       .filter(el => el.data.parent && el.data.parent.id === element.data.id)
@@ -89,54 +184,5 @@ export class DndTreeService {
     if (this.htmlCallCount > HTML_CALL_LIMIT) {
       throw new Error('too many html calls (probably a recursive error)');
     }
-  }
-
-  moveElement(element: MetaElement, newParentElement: MetaElement, newPosition: number, tree: DnDItem) {
-    const parentLocation = this.findNestedItem(newParentElement, tree);
-    const newNestedParent = parentLocation.nestedItem;
-
-    if (!newNestedParent) {
-      throw new Error('new parent cannot be found');
-    }
-
-    const nestedItem = this.findAndRemoveNestedItem(element, tree);
-
-    if (!nestedItem) {
-      throw new Error('element cannot be found');
-    }
-
-    this.placeElement(nestedItem, newNestedParent, newPosition);
-  }
-
-  findAndRemoveNestedItem(element: MetaElement, tree: DnDItem): DnDItem | void {
-    const {nestedItem, nestedParent} = this.findNestedItem(element, tree);
-    if (nestedItem && nestedParent) {
-      const index = nestedParent.children.indexOf(nestedItem);
-      return nestedParent.children.splice(index, 1)[0];
-    }
-  }
-
-  findNestedItem(element: MetaElement, tree: DnDItem): ElementNestedLocation {
-    for (const child of tree.children) {
-      if (child.metaElement === element) {
-        // const index = tree.children.indexOf(child);
-        return {
-          nestedItem: child,
-          nestedParent: tree
-        };
-      } else {
-        const nestedLocation = this.findNestedItem(element, child);
-
-        if (nestedLocation && nestedLocation.nestedItem) {
-          return nestedLocation;
-        }
-      }
-    }
-
-    return {};
-  }
-
-  placeElement(nestedItem: DnDItem, nestedParent: DnDItem, position: number) {
-    nestedParent.children.splice(position, 0, nestedItem);
   }
 }

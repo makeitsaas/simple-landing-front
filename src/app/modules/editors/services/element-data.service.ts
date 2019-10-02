@@ -33,6 +33,14 @@ export class ElementDataService {
     }));
   }
 
+  createElement(pageId: string, type: string, options: object = {}) {
+    return this.http.post(environment.APIUrl + `/pages/${pageId}/elements`, {
+      ...options,
+      type
+    }).pipe(map((response: any) => {
+      return response;
+    }));
+  }
 
   updateElement(htmlElementId: string | number, {fields, translations}: { fields?: any, translations?: any }): Observable<any> {
     const currentLanguage = 'en';

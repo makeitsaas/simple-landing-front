@@ -14,7 +14,7 @@
     <!-- Available new elements -->
     <div class="store">
 
-      <ng-container *ngTemplateOutlet="storeItems; context:{ $implicit: store }"></ng-container>
+      <ng-container *ngTemplateOutlet="storeItems; context:{ $implicit: itemTemplates }"></ng-container>
 
     </div>
 
@@ -27,7 +27,7 @@
       <button class="btn btn-default pull-right" (click)="editBack()" style="transform: scaleX(-1);">
         <i class="glyphicon glyphicon-share-alt small"></i>
       </button>
-      <button class="btn btn-default pull-right" (click)="triggerProgrammaticReordering()" style="margin: 0 5px;">
+      <button class="btn btn-default pull-right" (click)="triggerProgrammaticAction()" style="margin: 0 5px;">
         <i class="glyphicon glyphicon-console small"></i>
       </button>
     </div>
@@ -80,12 +80,12 @@
        [dndType]="item.type"
        dndEffectAllowed="move"
        [dndDisableIf]="item.disable"
-       (dndStart)="onDragStart($event)"
+       (dndStart)="onDragStart($event, item)"
        (dndCopied)="onDragged(item, list, 'copy')"
        (dndLinked)="onDragged(item, list, 'link')"
        (dndMoved)="onDragged(item, list, 'move')"
        (dndCanceled)="onDragged(item, list, 'none')"
-       (dndEnd)="onDragEnd($event)"
+       (dndEnd)="onDragEnd($event, item)"
        [ngClass]="getElementCssClasses(item, parentType)">
 
     <div *ngIf="item.type !== 'block' && item.type !== 'column'"
@@ -106,8 +106,6 @@
          (click)="toggleContainer(item.metaElement)">
       <app-block-thumbnail [element]="item.metaElement"></app-block-thumbnail>
     </div>
-
-    <pre *ngIf="item.type === 'column'">{{item.metaElement.data|json}}</pre>
 
     <div *ngIf="item.customDragImage"
          dndDragImageRef>MY_CUSTOM_DRAG_IMAGE

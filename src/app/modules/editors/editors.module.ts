@@ -15,7 +15,7 @@ import { DndModule } from 'ngx-drag-drop';
 import { MatCardModule, MatIconModule, MatSnackBarModule } from '@angular/material';
 import { BlockThumbnailComponent } from './components/block-thumbnail/block-thumbnail.component';
 import { DndTreeService } from './services/dnd-tree.service';
-import { MetaElementStore } from './services/meta-element.store';
+import { MetaElementStoreService } from './services/meta-element-store.service';
 
 @NgModule({
   imports: [
@@ -41,7 +41,7 @@ import { MetaElementStore } from './services/meta-element.store';
   providers: [
     ElementDataService,
     DndTreeService,
-    MetaElementStore
+    MetaElementStoreService
   ],
   entryComponents: [InlineFieldComponent]
 })
