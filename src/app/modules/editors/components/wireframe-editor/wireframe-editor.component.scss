@@ -1,8 +1,16 @@
-.store {
+.sidenav-toggle {
+  transition: margin .5s;
+  &.active {
+    margin-left: -50px;
+  }
+}
+
+.dnd-templates {
+  z-index: 20;
   padding: 10px 10px;
   background: #FFF;
 
-  .store-item {
+  .dnd-templates-item {
     display: inline-block;
     padding: 5px 12px;
     margin: 0 5px;

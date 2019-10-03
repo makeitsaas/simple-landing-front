@@ -12,7 +12,7 @@ import { AutofocusDirective } from './directives/autofocus.directive';
 import { BlockElementComponent } from './components/block-element/block-element.component';
 import { DynamicValueComponent } from './forms/inputs/dynamic-value/dynamic-value.component';
 import { DndModule } from 'ngx-drag-drop';
-import { MatCardModule, MatIconModule, MatSnackBarModule } from '@angular/material';
+import { MatCardModule, MatIconModule, MatMenuModule, MatSidenavModule, MatSnackBarModule } from '@angular/material';
 import { BlockThumbnailComponent } from './components/block-thumbnail/block-thumbnail.component';
 import { DndTreeService } from './services/dnd-tree.service';
 import { MetaElementStoreService } from './services/meta-element-store.service';
@@ -26,7 +26,9 @@ import { EditorContextService } from './services/editor-context.service';
     DndModule,
     MatSnackBarModule,
     MatCardModule,
-    MatIconModule
+    MatIconModule,
+    MatMenuModule,
+    MatSidenavModule
   ],
   declarations: [
     BaseEditorComponent,

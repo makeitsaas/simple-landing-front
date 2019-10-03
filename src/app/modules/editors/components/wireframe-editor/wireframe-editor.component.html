@@ -2,24 +2,11 @@
 
 <div class="wireframe-editor">
 
-  <!-- Background grid -->
-  <div class="bg-grid">
-    <div class="container">
-      <div class="content">&nbsp;</div>
-    </div>
-  </div>
-
   <!-- header -->
-  <header>
-    <!-- Available new elements -->
-    <div class="store">
-
-      <ng-container *ngTemplateOutlet="storeItems; context:{ $implicit: itemTemplates }"></ng-container>
-
-    </div>
+  <header style="position: fixed;z-index: 10">
 
     <!-- header actions -->
-    <div style="position: fixed;top: 7px; right: 20px;z-index: 10">
+    <div style="position: fixed;top: 7px; right: 20px;">
       <button class="btn btn-success pull-right" (click)="save()" [disabled]="pendingSave">Save</button>
       <button class="btn btn-default pull-right" (click)="editForward()" [disabled]="pendingSave || !canGoNext" style="margin: 0 5px;">
         <i class="glyphicon glyphicon-share-alt small"></i>
@@ -27,20 +14,56 @@
       <button class="btn btn-default pull-right" (click)="editBack()" [disabled]="pendingSave || !canGoPrev" style="transform: scaleX(-1);">
         <i class="glyphicon glyphicon-share-alt small"></i>
       </button>
-      <button class="btn btn-default pull-right" (click)="triggerProgrammaticAction()" style="margin: 0 5px;">
-        <i class="glyphicon glyphicon-console small"></i>
+<!--      <button class="btn btn-default pull-right" (click)="triggerProgrammaticAction()">-->
+<!--        <i class="glyphicon glyphicon-console small"></i>-->
+<!--      </button>-->
+      <button class="btn btn-default pull-right" [matMenuTriggerFor]="appMenu" style="margin: 0 5px;">
+        <i class="glyphicon glyphicon-wrench small"></i>
       </button>
+      <mat-menu #appMenu="matMenu">
+        <button [routerLink]="'/editors/wireframe'" mat-menu-item>Structure</button>
+        <button [routerLink]="'/editors/fields'" mat-menu-item>Textes</button>
+        <button mat-menu-item>Styles</button>
+        <button mat-menu-item>Aperçu</button>
+      </mat-menu>
     </div>
+
+    <button class="btn btn-default sidenav-toggle" [class.active]="showTemplates" (click)="showTemplates = !showTemplates">
+      <i class="glyphicon glyphicon-th small"></i>
+    </button>
   </header>
 
+  <mat-sidenav-container [hasBackdrop]="false" (backdropClick)="showTemplates=false">
+    <mat-sidenav [opened]="showTemplates" (keydown.escape)="showTemplates=false">
+      <!-- Available new elements -->
+      <div class="dnd-templates">
 
-  <!-- Actual page tree -->
-  <div [dndDropzone]="['section']"
-       (dndDrop)="onDrop($event, pageTree.children)">
+        <ng-container *ngTemplateOutlet="storeItems; context:{ $implicit: itemTemplates }"></ng-container>
 
-    <ng-container *ngTemplateOutlet="recursiveList; context:{ parentType: 'page', list: pageTree?.children }"></ng-container>
+      </div>
+    </mat-sidenav>
+    <mat-sidenav-content (click)="showTemplates=false">
 
-  </div>
+      <!-- Background grid -->
+      <div class="bg-grid">
+        <div class="container">
+          <div class="content">&nbsp;</div>
+        </div>
+      </div>
+
+      <!-- Actual page tree -->
+      <div [dndDropzone]="['section']"
+           (dndDrop)="onDrop($event, pageTree.children)">
+
+        <ng-container *ngTemplateOutlet="recursiveList; context:{ parentType: 'page', list: pageTree?.children }"></ng-container>
+
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+
+
+
+
 
   <!-- page bottom: add section - later (maybe put this action inside section) -->
 
@@ -48,7 +71,7 @@
 
 
 <ng-template #storeItems let-store>
-  <div class="store-item"
+  <div class="dnd-templates-item"
        *ngFor="let storeItem of store"
        [dndDraggable]="storeItem"
        [dndType]="storeItem.type"

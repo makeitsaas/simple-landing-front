@@ -56,6 +56,7 @@ export class WireframeEditorComponent implements OnInit {
   canGoPrev = false;
   canGoNext = false;
   pendingSave = false;
+  showTemplates = false;
 
   constructor(
     private snackBarService: MatSnackBar,

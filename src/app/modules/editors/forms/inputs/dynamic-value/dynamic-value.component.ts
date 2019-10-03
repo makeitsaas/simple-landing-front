@@ -31,8 +31,7 @@ export class DynamicValueComponent implements OnInit {
     if (putOptions.translations) {
       const lang = this.editorContextService.getCurrentLanguageCode();
       const translations = putOptions.translations;
-      putOptions.translations = {};
-      putOptions[lang] = translations;
+      putOptions.translations = {[lang]: translations};
     }
     this.htmlElementsService.updateElement(this.dataId, putOptions)
       .subscribe(() => console.log('success'), err => this.onError(err));
