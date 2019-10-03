@@ -7,7 +7,7 @@ interface ElementDiffFields {
   // metaElement: MetaElement;
 }
 
-export class ElementDiff implements ElementDiffFields {
+export class ElementDataDiff implements ElementDiffFields {
   action: 'updateField' | 'updateTranslation' | 'updateLocation' | 'other';
   nextValue: any;
   previousValue: any;

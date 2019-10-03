@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MetaElementStoreService } from './meta-element-store.service';
 import { MetaElementStore } from '../store/meta-element.store';
+import { EditorContextService } from './editor-context.service';
 
 const HTML_CALL_LIMIT = 10000;
 
@@ -44,7 +45,7 @@ export class DndTreeService {
   private htmlCallCount = 0;
 
   constructor(
-    private metaElementStore: MetaElementStoreService
+    private metaElementStoreService: MetaElementStoreService
   ) {
   }
 
@@ -55,7 +56,7 @@ export class DndTreeService {
    */
 
   getPageTree(pageId: string): Observable<DnDItem> {
-    return this.metaElementStore.getPageMetaElements(pageId).pipe(map((elements: MetaElement[]) => {
+    return this.metaElementStoreService.getPageMetaElements(pageId).pipe(map((elements: MetaElement[]) => {
       const pageElement = elements.filter(el => el.data.type === 'page')[0];
       const dragPageTree = this.populateAsDraggableChildren(pageElement, elements);
 
@@ -132,11 +133,11 @@ export class DndTreeService {
   bindMetaElement(dndItem: any): DnDItem {
     if (!dndItem.metaElement) {
       // item comes from a DndItemTemplate => create new MetaElements for it and its children
-      dndItem.metaElement = this.metaElementStore.getNewMetaElement(dndItem);
+      dndItem.metaElement = this.metaElementStoreService.getNewMetaElement(dndItem);
 
     } else if (!(dndItem.metaElement instanceof MetaElement)) {
       // item comes from a DnDItem, but has been cloned => rebind recursively MetaElements
-      dndItem.metaElement = this.metaElementStore.findMetaByLocalId(dndItem.metaElement.localId);
+      dndItem.metaElement = MetaElementStore.findMetaByLocalId(dndItem.metaElement.localId);
     }
 
     dndItem.children = dndItem.children.map(child => this.bindMetaElement(child));
@@ -147,8 +148,8 @@ export class DndTreeService {
 
   afterSetupCleanPositions(tree: DnDItem) {
     tree.children.map((child, i) => {
-        child.metaElement.setCleanedPosition(i);
-        this.afterSetupCleanPositions(child);
+      child.metaElement.setCleanedPosition(i, tree.metaElement.localId);
+      this.afterSetupCleanPositions(child);
     });
   }
 
@@ -162,7 +163,17 @@ export class DndTreeService {
     const dragItem: any = this.transformElementAsDraggable(element);
     dragItem.children = elements
       .filter(el => el.data.parent && el.data.parent.id === element.data.id)
-      .map(child => this.populateAsDraggableChildren(child, elements));
+      .map(child => this.populateAsDraggableChildren(child, elements))
+      .sort((child1, child2) => {
+        // metaElement.treeLocation might not be set yet, because tree hasn't been displayed
+        const pos1 = child1.metaElement.data.position || 0;
+        const pos2 = child2.metaElement.data.position || 0;
+        if (pos1 === pos2) {
+          return 0;
+        } else {
+          return pos1 > pos2 ? 1 : -1;
+        }
+      });
 
     this.incHtmlCallCount();
 

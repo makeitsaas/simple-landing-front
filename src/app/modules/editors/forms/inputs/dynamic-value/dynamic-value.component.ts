@@ -1,5 +1,6 @@
 import { Component, ElementRef, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ElementDataService } from '../../../services/element-data.service';
+import { EditorContextService } from '../../../services/editor-context.service';
 
 @Component({
   selector: 'dynamic-value',
@@ -14,7 +15,8 @@ export class DynamicValueComponent implements OnInit {
 
   constructor(
     private el: ElementRef,
-    private htmlElementsService: ElementDataService
+    private htmlElementsService: ElementDataService,
+    private editorContextService: EditorContextService
   ) {
   }
 
@@ -26,6 +28,12 @@ export class DynamicValueComponent implements OnInit {
     // console.log(`save element(${this.dataId})[${this.dataCode}]`, newValue);
     this.sampleModel = newValue;
     const putOptions = this.assignDotKey({}, this.dataCode, newValue);
+    if (putOptions.translations) {
+      const lang = this.editorContextService.getCurrentLanguageCode();
+      const translations = putOptions.translations;
+      putOptions.translations = {};
+      putOptions[lang] = translations;
+    }
     this.htmlElementsService.updateElement(this.dataId, putOptions)
       .subscribe(() => console.log('success'), err => this.onError(err));
   }

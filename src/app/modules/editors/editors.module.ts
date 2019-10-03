@@ -16,6 +16,7 @@ import { MatCardModule, MatIconModule, MatSnackBarModule } from '@angular/materi
 import { BlockThumbnailComponent } from './components/block-thumbnail/block-thumbnail.component';
 import { DndTreeService } from './services/dnd-tree.service';
 import { MetaElementStoreService } from './services/meta-element-store.service';
+import { EditorContextService } from './services/editor-context.service';
 
 @NgModule({
   imports: [
@@ -41,7 +42,8 @@ import { MetaElementStoreService } from './services/meta-element-store.service';
   providers: [
     ElementDataService,
     DndTreeService,
-    MetaElementStoreService
+    MetaElementStoreService,
+    EditorContextService
   ],
   entryComponents: [InlineFieldComponent]
 })

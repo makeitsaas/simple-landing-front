@@ -8,6 +8,7 @@ import { AutofocusDirective } from '../../directives/autofocus.directive';
 import { DynamicValueComponent } from '../../forms/inputs/dynamic-value/dynamic-value.component';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { environment } from '@env';
+import { EditorContextService } from '../../services/editor-context.service';
 
 @Component({
   templateUrl: './fields-editor.component.html'
@@ -21,6 +22,7 @@ export class FieldsEditorComponent implements OnInit, AfterViewInit {
   constructor(
     private htmlElementsService: ElementDataService,
     private componentFactoryResolver: ComponentFactoryResolver,
+    private editorContextService: EditorContextService,
     private compiler: Compiler,
     private sanitizer: DomSanitizer
   ) {
@@ -30,7 +32,8 @@ export class FieldsEditorComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.htmlElementsService.getPageLayers('1').subscribe(layers => {
+    const pageId = this.editorContextService.getCurrentPageId();
+    this.htmlElementsService.getPageLayers(pageId).subscribe(layers => {
       console.log('page layers', layers);
       this.layers = layers;
       this.stylesUrl = layers.styles

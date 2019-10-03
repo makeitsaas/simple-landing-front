@@ -13,6 +13,13 @@ export interface IPageLayers {
   scripts: AssetsInterface[];
 }
 
+export interface UpdateElementDto {
+  fields?: any;
+  translations?: {[lang: string]: any};
+  parent?: string|number;
+  position?: number;
+}
+
 @Injectable()
 export class ElementDataService {
 
@@ -42,15 +49,8 @@ export class ElementDataService {
     }));
   }
 
-  updateElement(htmlElementId: string | number, {fields, translations}: { fields?: any, translations?: any }): Observable<any> {
-    const currentLanguage = 'en';
-    const translationsByLang = {};
-
-    if (translations) {
-      translationsByLang[currentLanguage] = translations;
-    }
-
-    return this.http.put(environment.APIUrl + `/pages/1/elements/${htmlElementId}`, {fields, translations: translationsByLang})
+  updateElement(htmlElementId: string | number, dto: UpdateElementDto): Observable<any> {
+    return this.http.put(environment.APIUrl + `/pages/1/elements/${htmlElementId}`, dto)
       .pipe(map((response: any) => {
         return response;
       }));

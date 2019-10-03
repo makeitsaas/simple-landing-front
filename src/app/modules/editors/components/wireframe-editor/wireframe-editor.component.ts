@@ -11,6 +11,7 @@ import { ElementDataInterface } from '../../entities/element-data';
 import { MetaElement } from '../../entities/meta-element';
 import { MetaElementStoreService } from '../../services/meta-element-store.service';
 import { Observable } from 'rxjs';
+import { EditorContextService } from '../../services/editor-context.service';
 
 // est-ce que c'était une bonne idée de passer l'interface en classe ? put**n
 const columnTemplate: DnDItemTemplate = {
@@ -49,41 +50,49 @@ export class WireframeEditorComponent implements OnInit {
 
   private currentDraggableEvent: DragEvent;
   private currentDragEffectMsg: string;
-  private pageId = '1';
+  private pageId;
   private watchers: { [key: number]: Observable<any> } = {};
   private currentDragItem: DnDItem | void;
   canGoPrev = false;
   canGoNext = false;
+  pendingSave = false;
 
   constructor(
     private snackBarService: MatSnackBar,
     private htmlElementsService: ElementDataService,
     private dndTreeService: DndTreeService,
-    private metaElementStore: MetaElementStoreService
+    private metaElementStore: MetaElementStoreService,
+    private editorContextService: EditorContextService
   ) {
   }
 
   ngOnInit() {
+    this.pageId = this.editorContextService.getCurrentPageId();
     this.dndTreeService.getPageTree(this.pageId).subscribe(pageTree => {
       this.pageTree = pageTree;
       this.dndTreeService.afterSetupCleanPositions(this.pageTree);
     });
     this.metaElementStore.treeChange.subscribe(element => this.onElementLocation(element));
+    this.metaElementStore.change.subscribe(() => this.refreshButtons());
   }
 
   save() {
-    console.log('save', this.pageTree.children);
-    this.htmlElementsService.updateTree(this.pageId, this.pageTree);
+    this.pendingSave = true;
+    this.metaElementStore.saveDiffs(this.pageId)
+      .then(() => this.snackBarService.open('Saved!', undefined, {duration: 2000}))
+      .catch(() => this.snackBarService.open('Error!', undefined, {duration: 2000}))
+      .finally(() => this.pendingSave = false);
   }
 
   editBack() {
     this.metaElementStore.goPrev();
-    this.canGoPrev = this.metaElementStore.canGoPrev();
-    this.canGoNext = this.metaElementStore.canGoNext();
   }
 
   editForward() {
     this.metaElementStore.goNext();
+  }
+
+  refreshButtons() {
     this.canGoPrev = this.metaElementStore.canGoPrev();
     this.canGoNext = this.metaElementStore.canGoNext();
   }
@@ -115,6 +124,7 @@ export class WireframeEditorComponent implements OnInit {
     if (effect === 'move') {
       const index = list.indexOf(item);
       list.splice(index, 1);
+      this.dndTreeService.afterSetupCleanPositions(this.pageTree);
     }
   }
 
@@ -126,7 +136,6 @@ export class WireframeEditorComponent implements OnInit {
   }
 
   onDrop(event: DndDropEvent, list: DnDItem[]) {
-    console.log('onDrop');
     if (['copy', 'move'].indexOf(event.dropEffect) !== -1) {
       const index = isNaN(event.index) ? list.length : event.index;
       const clonedDnDItem: DnDItem = event.data;
@@ -137,7 +146,7 @@ export class WireframeEditorComponent implements OnInit {
       // logical position, ignoring temporary or copied items
       const logicalPosition = list.slice(0, index).filter(item => {
         console.log('item', item);
-        return true;
+        return item.metaElement !== boundDndItem.metaElement;
       }).length;
 
       // DnD Tree is changed, tell MetaElement he has changed position
@@ -156,10 +165,10 @@ export class WireframeEditorComponent implements OnInit {
     if (parentHasChanged || positionHasChanged) {
       console.log('onElementLocation => move element', metaElement.treeLocation, this.currentDragItem);
       this.dndTreeService.moveElement(metaElement, this.pageTree);
+      this.dndTreeService.afterSetupCleanPositions(nestedParent);
     } else {
       console.log('onElementLocation => nothing to do', metaElement.treeLocation, this.currentDragItem);
     }
-    this.dndTreeService.afterSetupCleanPositions(nestedParent);
   }
 
   getAcceptableChildrenTypes(item: DnDItem) {

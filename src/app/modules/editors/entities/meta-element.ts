@@ -15,8 +15,9 @@ MetaElement Vs ElementData :
  */
 
 import { ElementData, ElementDataInterface } from './element-data';
-import { ElementDiff } from './element-diff';
+import { ElementDataDiff } from './element-data-diff';
 import { MetaElementStore } from '../store/meta-element.store';
+import { DiffEntry } from '../services/meta-element-store.service';
 
 let nextLocalId = 1;
 
@@ -36,7 +37,7 @@ class LocationChange {
   newParent?: MetaElement;
 }
 
-interface TreeLocation {
+export interface TreeLocation {
   position: number;
   parentMetaElementId: number;
 }
@@ -49,45 +50,44 @@ export class MetaElement {
   data: ElementData;            // preferably immutable
   treeLocation: TreeLocation;   // because parent might not have a database id, we must link to MetaElement (which will always exist)
   storeDiffCallback: (ElementDiff) => void;
-  private onSaveReady: Promise<any> = new Promise<any>(resolve => this.saveReadyResolve = resolve);
+  onSaveReady: Promise<any> = new Promise<any>(resolve => this.saveReadyResolve = resolve);
+  isNewElement = false;
 
   constructor(data: ElementData | any = {type: 'block'}) {
     this.applyDataChange(data);
-    setTimeout(() => {
-
-    }, 10);
   }
 
   /*
     External setters
    */
 
-  setRemoteDataResponse(data: ElementDataInterface) {
+  setRemoteDataResponse(data: ElementDataInterface, diffSinceRequest: DiffEntry[]) {
     this.applyDataChange(data);
+    console.log('diff since request', diffSinceRequest);
   }
 
   setTreeLocation(parentMetaElement: MetaElement, position: number) {
-    // if moved into same container at a greater position, index will have 1 more than expected
-    // (Dnd displays item at its previous position, so there is one item more)
-    const isPlacedAfterItself = this.treeLocation
-                              && parentMetaElement.localId === this.treeLocation.parentMetaElementId
-                              && position > this.treeLocation.position;
-    const realPosition = isPlacedAfterItself ? (position - 1) : position;
-    const diff = new ElementDiff({
+    // Position has to be the index in parent.children where this element has to be placed.
+    // The tree must not have any DnDItem instance of this element (otherwise we might have a bias
+    // when element is moved inside the same parent at a greater position).
+    // This precaution has to be made earlier, not here.
+    // Move element = 1.remove + 2.insert
+    const diff = new ElementDataDiff({
       action: 'updateLocation',
       nextValue: {
         parentMetaElementId: parentMetaElement.localId,
-        position: realPosition
+        position
       },
       previousValue: {      // reassign new object to avoid unexpected bindings
         ...this.treeLocation
       }
     });
+    console.log('previous', this.treeLocation, JSON.stringify(this.treeLocation));
     this.storeDiffCallback(diff);
   }
 
   setField(key: string, nextValue: any) {
-    const diff = new ElementDiff({
+    const diff = new ElementDataDiff({
       action: 'updateField',
       nextValue: {
         key,
@@ -105,28 +105,21 @@ export class MetaElement {
 
   }
 
-  setCleanedPosition(cleanPosition: number) {
+  setCleanedPosition(cleanPosition: number, parentMetaElementId: number) {
     // sometime, we might have elements coming from API with same position value.
     // that's why we ensure, for better UX, that displayed position is applied to MetaElement
-    if (!this.treeLocation && this.data.parent) {
-      const metaParent = MetaElementStore.findMetaByElementById(this.data.parent.id);
-      this.treeLocation = {
-        position: this.data.position,
-        parentMetaElementId: metaParent && metaParent.localId
-      };
-    }
 
-    // reassign new object to avoid unexpected bindings
+    // NOTE : reassign new object to avoid unexpected bindings
     this.treeLocation = {
-      ...this.treeLocation,
-      position: cleanPosition
+      position: cleanPosition,
+      parentMetaElementId
     };
   }
 
   /*
     State control
    */
-  usePreviousData(diff: ElementDiff) {
+  usePreviousData(diff: ElementDataDiff) {
     switch (diff.action) {
       case 'updateField':
         this.applyFieldChange(diff.previousValue);
@@ -137,7 +130,7 @@ export class MetaElement {
     }
   }
 
-  useNextData(diff: ElementDiff) {
+  useNextData(diff: ElementDataDiff) {
     switch (diff.action) {
       case 'updateField':
         this.applyFieldChange(diff.nextValue);
@@ -166,6 +159,8 @@ export class MetaElement {
 
     if (this.data.id) {
       this.saveReadyResolve();
+    } else {
+      this.isNewElement = true;
     }
   }
 

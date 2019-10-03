@@ -20,11 +20,11 @@
 
     <!-- header actions -->
     <div style="position: fixed;top: 7px; right: 20px;z-index: 10">
-      <button class="btn btn-success pull-right" (click)="save()">Save</button>
-      <button class="btn btn-default pull-right" (click)="editForward()" style="margin: 0 5px;">
+      <button class="btn btn-success pull-right" (click)="save()" [disabled]="pendingSave">Save</button>
+      <button class="btn btn-default pull-right" (click)="editForward()" [disabled]="pendingSave || !canGoNext" style="margin: 0 5px;">
         <i class="glyphicon glyphicon-share-alt small"></i>
       </button>
-      <button class="btn btn-default pull-right" (click)="editBack()" style="transform: scaleX(-1);">
+      <button class="btn btn-default pull-right" (click)="editBack()" [disabled]="pendingSave || !canGoPrev" style="transform: scaleX(-1);">
         <i class="glyphicon glyphicon-share-alt small"></i>
       </button>
       <button class="btn btn-default pull-right" (click)="triggerProgrammaticAction()" style="margin: 0 5px;">
