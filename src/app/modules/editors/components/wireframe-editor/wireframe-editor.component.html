@@ -26,6 +26,12 @@
         <button mat-menu-item>Styles</button>
         <button mat-menu-item>Aperçu</button>
       </mat-menu>
+
+      <button class="btn btn-info pull-right"
+              (click)="showHelp()"
+              style="margin: 0 5px; background: transparent; border: none; color: #000">
+        <i class="glyphicon glyphicon-question-sign small"></i>
+      </button>
     </div>
 
     <button class="btn btn-default sidenav-toggle" [class.active]="showTemplates" (click)="showTemplates = !showTemplates">
@@ -34,7 +40,10 @@
   </header>
 
   <mat-sidenav-container [hasBackdrop]="false" (backdropClick)="showTemplates=false">
-    <mat-sidenav [opened]="showTemplates" (keydown.escape)="showTemplates=false">
+    <mat-sidenav
+      [opened]="showTemplates"
+      [fixedInViewport]="true"
+      (keydown.escape)="showTemplates=false">
       <!-- Available new elements -->
       <div class="dnd-templates">
 

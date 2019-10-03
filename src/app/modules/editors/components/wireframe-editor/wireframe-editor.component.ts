@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DndDropEvent, DropEffect } from 'ngx-drag-drop';
-import { MatSnackBar } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { ElementDataService } from '../../services/element-data.service';
 import {
   DndTreeService,
@@ -12,6 +12,7 @@ import { MetaElement } from '../../entities/meta-element';
 import { MetaElementStoreService } from '../../services/meta-element-store.service';
 import { Observable } from 'rxjs';
 import { EditorContextService } from '../../services/editor-context.service';
+import { HelpEditorDialogComponent } from '../dialog/help-editor-dialog/help-editor-dialog.component';
 
 // est-ce que c'était une bonne idée de passer l'interface en classe ? put**n
 const columnTemplate: DnDItemTemplate = {
@@ -63,7 +64,8 @@ export class WireframeEditorComponent implements OnInit {
     private htmlElementsService: ElementDataService,
     private dndTreeService: DndTreeService,
     private metaElementStore: MetaElementStoreService,
-    private editorContextService: EditorContextService
+    private editorContextService: EditorContextService,
+    public dialog: MatDialog
   ) {
   }
 
@@ -98,16 +100,23 @@ export class WireframeEditorComponent implements OnInit {
     this.canGoNext = this.metaElementStore.canGoNext();
   }
 
-  triggerProgrammaticAction() {
-    console.log('nothing yet');
-  }
-
   toggleContainer(element: MetaElement) {
     element.setField('container', element.data.fields.container === 'fluid' ? null : 'fluid');
   }
 
   toggleColumnsWidth(item: DnDItem) {
     item.children.forEach(child => child.cols = child.cols === 2 ? 6 : 2);
+  }
+
+  showHelp() {
+    const dialogRef = this.dialog.open(HelpEditorDialogComponent, {
+      // width: '250px',
+      data: {}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+    });
   }
 
   onDragStart(event: DragEvent, originalItem?: DnDItem) {

@@ -12,11 +12,20 @@ import { AutofocusDirective } from './directives/autofocus.directive';
 import { BlockElementComponent } from './components/block-element/block-element.component';
 import { DynamicValueComponent } from './forms/inputs/dynamic-value/dynamic-value.component';
 import { DndModule } from 'ngx-drag-drop';
-import { MatCardModule, MatIconModule, MatMenuModule, MatSidenavModule, MatSnackBarModule } from '@angular/material';
+import {
+  MatButtonModule,
+  MatCardModule,
+  MatDialogModule,
+  MatIconModule,
+  MatMenuModule,
+  MatSidenavModule,
+  MatSnackBarModule
+} from '@angular/material';
 import { BlockThumbnailComponent } from './components/block-thumbnail/block-thumbnail.component';
 import { DndTreeService } from './services/dnd-tree.service';
 import { MetaElementStoreService } from './services/meta-element-store.service';
 import { EditorContextService } from './services/editor-context.service';
+import { HelpEditorDialogComponent } from './components/dialog/help-editor-dialog/help-editor-dialog.component';
 
 @NgModule({
   imports: [
@@ -28,7 +37,9 @@ import { EditorContextService } from './services/editor-context.service';
     MatCardModule,
     MatIconModule,
     MatMenuModule,
-    MatSidenavModule
+    MatDialogModule,
+    MatSidenavModule,
+    MatButtonModule
   ],
   declarations: [
     BaseEditorComponent,
@@ -39,7 +50,8 @@ import { EditorContextService } from './services/editor-context.service';
     AutofocusDirective,
     BlockElementComponent,
     DynamicValueComponent,
-    BlockThumbnailComponent
+    BlockThumbnailComponent,
+    HelpEditorDialogComponent
   ],
   providers: [
     ElementDataService,
@@ -47,7 +59,10 @@ import { EditorContextService } from './services/editor-context.service';
     MetaElementStoreService,
     EditorContextService
   ],
-  entryComponents: [InlineFieldComponent]
+  entryComponents: [
+    InlineFieldComponent,
+    HelpEditorDialogComponent
+  ]
 })
 export class EditorsModule {
 }
