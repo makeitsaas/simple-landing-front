@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MetaElementStoreService } from './meta-element-store.service';
 import { MetaElementStore } from '../store/meta-element.store';
-import { EditorContextService } from './editor-context.service';
 
 const HTML_CALL_LIMIT = 10000;
 
@@ -64,31 +63,21 @@ export class DndTreeService {
     }));
   }
 
-  moveElement(element: MetaElement, tree: DnDItem) {
-    const targetParentElement = MetaElementStore.findMetaByLocalId(element.treeLocation.parentMetaElementId);
+  moveElement(element: MetaElement, tree: DnDItem): ElementNestedLocation {
+    const targetParentElement = element.treeLocation && MetaElementStore.findMetaByLocalId(element.treeLocation.parentMetaElementId);
     const newPosition = element.treeLocation.position;
-
-    if (!targetParentElement) {
-      throw new Error('no parent');
-    }
-
-    // const targetParentItem = this.findNestedItem(targetParentElement, tree);
-    // const targetParentDnDItem = targetParentItem.nestedItem;
-
-    const {nestedItem: targetParentDnDItem} = this.findNestedItem(targetParentElement, tree);
-
-    if (!targetParentDnDItem) {
-      console.log('target parent MetaElement', targetParentElement);
-      throw new Error('new parent cannot be found');
-    }
-
-    const nestedItem = this.findAndRemoveNestedItem(element, tree);
+    let nestedItem = this.findAndRemoveNestedItem(element, tree);
 
     if (!nestedItem) {
-      throw new Error('element cannot be found');
+      nestedItem = this.populateAsDraggableChildren(element, MetaElementStore.getMetaElements());
     }
 
-    this.placeElement(nestedItem, targetParentDnDItem, newPosition);
+    if (targetParentElement) {
+      const {nestedItem: targetParentDnDItem} = this.findNestedItem(targetParentElement, tree);
+      this.placeElement(nestedItem, targetParentDnDItem, newPosition);
+    }
+
+    return this.findNestedItem(element, tree);
   }
 
   findAndRemoveNestedItem(element: MetaElement, tree: DnDItem): DnDItem | void {
@@ -162,7 +151,13 @@ export class DndTreeService {
   private populateAsDraggableChildren(element: MetaElement, elements: MetaElement[]): DnDItem {
     const dragItem: any = this.transformElementAsDraggable(element);
     dragItem.children = elements
-      .filter(el => el.data.parent && el.data.parent.id === element.data.id)
+      .filter(el => {
+        if (el.treeLocation) {
+          return el.treeLocation.parentMetaElementId === element.localId;
+        } else {
+          return el.data.parent && el.data.parent.id === element.data.id;
+        }
+      })
       .map(child => this.populateAsDraggableChildren(child, elements))
       .sort((child1, child2) => {
         // metaElement.treeLocation might not be set yet, because tree hasn't been displayed

@@ -7,7 +7,7 @@ export const MetaElementStore = {
     return allMetaElements.push(element);
   },
 
-  findMetaByElementById(elementId: string | number): MetaElement | void {
+  findMetaByElementId(elementId: string | number): MetaElement | void {
     return allMetaElements.filter(meta => meta.data.id === elementId)[0];
   },
 
@@ -21,6 +21,10 @@ export const MetaElementStore = {
     return allMetaElements.filter(
       meta => meta.treeLocation
         && meta.treeLocation.parentMetaElementId === parentMetaId);
+  },
+
+  getMetaElements(): MetaElement[] {
+    return allMetaElements;
   },
 
   findNewMetaElements(pageId: string): MetaElement[] {

@@ -74,7 +74,7 @@ export class MetaElementStoreService {
   getPageMetaElements(pageId: string): Observable<MetaElement[]> {
     return this.elementDataService.getPageElements(pageId).pipe(map(elements => {
       return elements.map(data => {
-        const existingMeta = MetaElementStore.findMetaByElementById(data.id);
+        const existingMeta = MetaElementStore.findMetaByElementId(data.id);
         if (existingMeta) {
           existingMeta.setRemoteDataResponse(data, []);
           return existingMeta;

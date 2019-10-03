@@ -159,13 +159,16 @@ export class WireframeEditorComponent implements OnInit {
 
   onElementLocation(metaElement: MetaElement) {
     const ignoreList = this.currentDragItem ? [this.currentDragItem] : [];
-    const {nestedItem, nestedParent} = this.dndTreeService.findNestedItem(metaElement, this.pageTree, ignoreList);
-    const parentHasChanged = nestedParent.metaElement.localId !== metaElement.treeLocation.parentMetaElementId;
-    const positionHasChanged = nestedParent.children.indexOf(nestedItem) !== metaElement.treeLocation.position;
-    if (parentHasChanged || positionHasChanged) {
+    const {nestedItem, nestedParent: initialParent} = this.dndTreeService.findNestedItem(metaElement, this.pageTree, ignoreList);
+    const hasParentChanged = !initialParent || initialParent.metaElement.localId !== metaElement.treeLocation.parentMetaElementId;
+    const hasPositionChanged = !initialParent
+      || !nestedItem
+      || initialParent.children.indexOf(nestedItem) !== metaElement.treeLocation.position;
+
+    if (hasParentChanged || hasPositionChanged) {
       console.log('onElementLocation => move element', metaElement.treeLocation, this.currentDragItem);
-      this.dndTreeService.moveElement(metaElement, this.pageTree);
-      this.dndTreeService.afterSetupCleanPositions(nestedParent);
+      const {nestedParent: newParent} = this.dndTreeService.moveElement(metaElement, this.pageTree);
+      this.dndTreeService.afterSetupCleanPositions(newParent || initialParent);
     } else {
       console.log('onElementLocation => nothing to do', metaElement.treeLocation, this.currentDragItem);
     }
