@@ -4,6 +4,8 @@ import { EditorContextService } from '../../services/editor-context.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { AbstractEditor } from '../abstract/abstract-editor';
 import { SassService } from '../../services/sass.service';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   templateUrl: './styles-editor.component.html',
@@ -11,11 +13,13 @@ import { SassService } from '../../services/sass.service';
 })
 export class StylesEditorComponent extends AbstractEditor implements OnInit, AfterViewInit {
 
+  openSidenav = true;
   editorHtmlId: string;
   editorModel: string;
   compiledStyles: SafeHtml;
   editableStyles: { [key: string]: string } = {};
-  scssError: string;
+  scssError: string|void;
+  scssErrorSubject: Subject<string|void> = new Subject<string|void>();
 
   constructor(
     private htmlElementsService: ElementDataService,
@@ -31,6 +35,9 @@ export class StylesEditorComponent extends AbstractEditor implements OnInit, Aft
 
   ngOnInit() {
     this.editorHtmlId = `session-id-${Math.floor(Math.random() * 100000)}`;
+    this.scssErrorSubject.pipe(
+      debounceTime(1500)
+    ).subscribe(error => (this.scssError = error, this.ref.detectChanges()));
   }
 
   ngAfterViewInit() {
@@ -43,6 +50,7 @@ export class StylesEditorComponent extends AbstractEditor implements OnInit, Aft
 
   onModelChange() {
     console.log('parent changes too', this.editorModel);
+    this.scssErrorSubject.next();
     this.convertScssToCss(this.editorModel).then(css => {
       console.log('my css', css);
       delete this.scssError;
@@ -50,7 +58,7 @@ export class StylesEditorComponent extends AbstractEditor implements OnInit, Aft
       const htmlToTrust = `<style>${css}</style>`;
       this.compiledStyles = this.sanitizer.bypassSecurityTrustHtml(htmlToTrust);
       this.ref.detectChanges();
-    }).catch(errorMessage => (console.error(errorMessage), this.scssError = errorMessage, this.ref.detectChanges()));
+    }).catch(errorMessage => this.scssErrorSubject.next(errorMessage));
   }
 
   wrapScss(scssData: string) {

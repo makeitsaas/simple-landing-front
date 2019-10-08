@@ -3,12 +3,17 @@
 
 <mat-sidenav-container [hasBackdrop]="false">
   <mat-sidenav
-    [opened]="true"
+    [opened]="openSidenav"
+    [disableClose]="true"
     [fixedInViewport]="true">
+
     <!-- Available new elements -->
     <div class="scss-editor">
       <div class="head">
         <h3>Sass Editor</h3>
+        <button class="sidenav-close" mat-button (click)="openSidenav=false">
+          <mat-icon>close</mat-icon>
+        </button>
       </div>
       <div class="content">
         <pre *ngIf="scssError">{{scssError}}</pre>
@@ -18,6 +23,10 @@
     </div>
   </mat-sidenav>
   <mat-sidenav-content>
+
+    <button mat-raised-button class="sidenav-open" (click)="openSidenav=true">
+      <mat-icon>brush</mat-icon>
+    </button>
 
     <div [id]="editorHtmlId">
       <div [innerHTML]="layers?.contentHtml" [style]="editableStyles.main"></div>

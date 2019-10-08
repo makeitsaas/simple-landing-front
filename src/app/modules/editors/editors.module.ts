@@ -28,8 +28,23 @@ import { EditorContextService } from './services/editor-context.service';
 import { HelpEditorDialogComponent } from './components/dialog/help-editor-dialog/help-editor-dialog.component';
 import { StylesEditorComponent } from './components/styles-editor/styles-editor.component';
 import { CodeEditorComponent } from './components/code-editor/code-editor.component';
-import { MonacoEditorModule } from 'ngx-monaco-editor';
+import { MonacoEditorModule, NgxMonacoEditorConfig } from 'ngx-monaco-editor';
 import { SassService } from './services/sass.service';
+
+const monacoConfig: NgxMonacoEditorConfig = {
+  defaultOptions: {
+    scrollBeyondLastLine: false,
+    scrollbar: {
+      verticalScrollbarSize: '10px'
+    },
+    minimap: {
+      enabled: false
+    }
+  }, // pass default options to be used
+  onMonacoLoad: () => {
+    // console.log((<any> window).monaco);
+  }
+};
 
 @NgModule({
   imports: [
@@ -37,7 +52,7 @@ import { SassService } from './services/sass.service';
     CommonModule,
     EditorsRoutingModule,
     DndModule,
-    MonacoEditorModule.forRoot(),
+    MonacoEditorModule.forRoot(monacoConfig),
 
     /* Material Modules */
     MatCardModule,
