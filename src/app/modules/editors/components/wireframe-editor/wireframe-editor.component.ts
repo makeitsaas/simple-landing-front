@@ -1,20 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { DndDropEvent, DropEffect } from 'ngx-drag-drop';
-import { MatDialog, MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 import { ElementDataService } from '../../services/element-data.service';
 import {
   DndTreeService,
   DnDItem,
   DnDItemTemplate
 } from '../../services/dnd-tree.service';
-import { ElementDataInterface } from '../../entities/element-data';
 import { MetaElement } from '../../entities/meta-element';
 import { MetaElementStoreService } from '../../services/meta-element-store.service';
-import { Observable } from 'rxjs';
 import { EditorContextService } from '../../services/editor-context.service';
-import { HelpEditorDialogComponent } from '../dialog/help-editor-dialog/help-editor-dialog.component';
 
-// est-ce que c'était une bonne idée de passer l'interface en classe ? put**n
 const columnTemplate: DnDItemTemplate = {
   content: 'New Column',
   type: 'column',
@@ -52,11 +48,7 @@ export class WireframeEditorComponent implements OnInit {
   private currentDraggableEvent: DragEvent;
   private currentDragEffectMsg: string;
   private pageId;
-  private watchers: { [key: number]: Observable<any> } = {};
   private currentDragItem: DnDItem | void;
-  canGoPrev = false;
-  canGoNext = false;
-  pendingSave = false;
   showTemplates = false;
 
   constructor(
@@ -64,8 +56,7 @@ export class WireframeEditorComponent implements OnInit {
     private htmlElementsService: ElementDataService,
     private dndTreeService: DndTreeService,
     private metaElementStore: MetaElementStoreService,
-    private editorContextService: EditorContextService,
-    public dialog: MatDialog
+    private editorContextService: EditorContextService
   ) {
   }
 
@@ -76,28 +67,6 @@ export class WireframeEditorComponent implements OnInit {
       this.dndTreeService.afterSetupCleanPositions(this.pageTree);
     });
     this.metaElementStore.treeChange.subscribe(element => this.onElementLocation(element));
-    this.metaElementStore.change.subscribe(() => this.refreshButtons());
-  }
-
-  save() {
-    this.pendingSave = true;
-    this.metaElementStore.saveDiffs(this.pageId)
-      .then(() => this.snackBarService.open('Saved!', undefined, {duration: 2000}))
-      .catch(() => this.snackBarService.open('Error!', undefined, {duration: 2000}))
-      .finally(() => this.pendingSave = false);
-  }
-
-  editBack() {
-    this.metaElementStore.goPrev();
-  }
-
-  editForward() {
-    this.metaElementStore.goNext();
-  }
-
-  refreshButtons() {
-    this.canGoPrev = this.metaElementStore.canGoPrev();
-    this.canGoNext = this.metaElementStore.canGoNext();
   }
 
   toggleContainer(element: MetaElement) {
@@ -108,22 +77,10 @@ export class WireframeEditorComponent implements OnInit {
     item.children.forEach(child => child.cols = child.cols === 2 ? 6 : 2);
   }
 
-  showHelp() {
-    const dialogRef = this.dialog.open(HelpEditorDialogComponent, {
-      // width: '250px',
-      data: {}
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
-    });
-  }
-
   onDragStart(event: DragEvent, originalItem?: DnDItem) {
+    this.currentDragItem = originalItem;
     this.currentDragEffectMsg = '';
     this.currentDraggableEvent = event;
-
-    this.currentDragItem = originalItem;
 
     this.snackBarService.dismiss();
     this.snackBarService.open('Drag started!', undefined, {duration: 2000});

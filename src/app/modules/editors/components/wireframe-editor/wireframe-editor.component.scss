@@ -1,7 +1,11 @@
 .sidenav-toggle {
   transition: margin .5s;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
   &.active {
-    margin-left: -50px;
+    left: -50px;
   }
 }
 

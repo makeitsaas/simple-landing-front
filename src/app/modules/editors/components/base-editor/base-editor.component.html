@@ -1,1 +1,35 @@
-<router-outlet></router-outlet>
+<div class="base-editor">
+  <!-- header -->
+  <header>
+
+    <!-- header actions -->
+    <div class="actions">
+      <button mat-raised-button color="primary" (click)="save()" [disabled]="pendingSave">
+        Save
+      </button>
+      <button mat-raised-button (click)="editForward()" [disabled]="pendingSave || !canGoNext">
+        <mat-icon aria-hidden="false" aria-label="Return to next modification">redo</mat-icon>
+      </button>
+      <button mat-raised-button (click)="editBack()" [disabled]="pendingSave || !canGoPrev">
+        <mat-icon aria-hidden="false" aria-label="Back to previous modification">undo</mat-icon>
+      </button>
+      <button mat-raised-button [matMenuTriggerFor]="appMenu">
+        <mat-icon aria-hidden="false" aria-label="Editor mode">build</mat-icon>
+      </button>
+      <mat-menu #appMenu="matMenu">
+        <button [routerLink]="'/editors/wireframe'" mat-menu-item>Structure</button>
+        <button [routerLink]="'/editors/fields'" mat-menu-item>Textes</button>
+        <button mat-menu-item>Styles</button>
+        <button mat-menu-item>Aperçu</button>
+      </mat-menu>
+
+      <button mat-button
+              (click)="showHelp()"
+              style="margin: 0 5px; background: transparent; border: none; color: #000">
+        <mat-icon aria-hidden="false" aria-label="Help">help</mat-icon>
+      </button>
+    </div>
+  </header>
+  <router-outlet></router-outlet>
+
+</div>

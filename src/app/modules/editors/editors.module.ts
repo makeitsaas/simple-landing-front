@@ -33,13 +33,15 @@ import { HelpEditorDialogComponent } from './components/dialog/help-editor-dialo
     CommonModule,
     EditorsRoutingModule,
     DndModule,
-    MatSnackBarModule,
+
+    /* Material Modules */
     MatCardModule,
     MatIconModule,
+    MatButtonModule,
     MatMenuModule,
+    MatSnackBarModule,
     MatDialogModule,
     MatSidenavModule,
-    MatButtonModule
   ],
   declarations: [
     BaseEditorComponent,

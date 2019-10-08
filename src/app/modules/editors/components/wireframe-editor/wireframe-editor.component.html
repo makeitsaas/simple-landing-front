@@ -2,42 +2,9 @@
 
 <div class="wireframe-editor">
 
-  <!-- header -->
-  <header style="position: fixed;z-index: 10">
-
-    <!-- header actions -->
-    <div style="position: fixed;top: 7px; right: 20px;">
-      <button class="btn btn-success pull-right" (click)="save()" [disabled]="pendingSave">Save</button>
-      <button class="btn btn-default pull-right" (click)="editForward()" [disabled]="pendingSave || !canGoNext" style="margin: 0 5px;">
-        <i class="glyphicon glyphicon-share-alt small"></i>
-      </button>
-      <button class="btn btn-default pull-right" (click)="editBack()" [disabled]="pendingSave || !canGoPrev" style="transform: scaleX(-1);">
-        <i class="glyphicon glyphicon-share-alt small"></i>
-      </button>
-<!--      <button class="btn btn-default pull-right" (click)="triggerProgrammaticAction()">-->
-<!--        <i class="glyphicon glyphicon-console small"></i>-->
-<!--      </button>-->
-      <button class="btn btn-default pull-right" [matMenuTriggerFor]="appMenu" style="margin: 0 5px;">
-        <i class="glyphicon glyphicon-wrench small"></i>
-      </button>
-      <mat-menu #appMenu="matMenu">
-        <button [routerLink]="'/editors/wireframe'" mat-menu-item>Structure</button>
-        <button [routerLink]="'/editors/fields'" mat-menu-item>Textes</button>
-        <button mat-menu-item>Styles</button>
-        <button mat-menu-item>Aperçu</button>
-      </mat-menu>
-
-      <button class="btn btn-info pull-right"
-              (click)="showHelp()"
-              style="margin: 0 5px; background: transparent; border: none; color: #000">
-        <i class="glyphicon glyphicon-question-sign small"></i>
-      </button>
-    </div>
-
-    <button class="btn btn-default sidenav-toggle" [class.active]="showTemplates" (click)="showTemplates = !showTemplates">
-      <i class="glyphicon glyphicon-th small"></i>
-    </button>
-  </header>
+  <button class="btn btn-default sidenav-toggle" [class.active]="showTemplates" (click)="showTemplates = !showTemplates">
+    <i class="glyphicon glyphicon-th small"></i>
+  </button>
 
   <mat-sidenav-container [hasBackdrop]="false" (backdropClick)="showTemplates=false">
     <mat-sidenav

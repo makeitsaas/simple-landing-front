@@ -15,7 +15,10 @@ img {
   @import "assets/scss/manage-module";
 }
 
+.base-editor {
+  @import "assets/scss/base-editor";
 
+}
 .wireframe-editor {
   @import "assets/scss/wireframe-editor";
 }
