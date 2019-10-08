@@ -1,5 +1,9 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-
+<style>
+  * {
+    background: blue;
+  }
+</style>
 <div class="wireframe-editor">
 
   <button class="btn btn-default sidenav-toggle" [class.active]="showTemplates" (click)="showTemplates = !showTemplates">
@@ -34,14 +38,10 @@
         <ng-container *ngTemplateOutlet="recursiveList; context:{ parentType: 'page', list: pageTree?.children }"></ng-container>
 
       </div>
+      <!-- page bottom: add section - later (maybe put this action inside section) -->
+
     </mat-sidenav-content>
   </mat-sidenav-container>
-
-
-
-
-
-  <!-- page bottom: add section - later (maybe put this action inside section) -->
 
 </div>
 

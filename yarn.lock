@@ -4618,6 +4618,13 @@ ngx-drag-drop@^2.0.0:
   dependencies:
     tslib "^1.9.0"
 
+ngx-monaco-editor@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/ngx-monaco-editor/-/ngx-monaco-editor-8.1.0.tgz#b092c7974b7f4335d1e4b7f803719bc3c102c28e"
+  integrity sha512-dWWd5E0rgm6bbjj+ASkrMEtl2/KI+jgGZTYgcIImqcmVHMSZ8e5M7nJKKItFXd6Eg0BQXxCVZ7qZPgr+aB+mDw==
+  dependencies:
+    tslib "^1.9.0"
+
 ngx-store@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/ngx-store/-/ngx-store-2.1.0.tgz#b0789406fd60102f8ea925f507376b87f91f9af2"

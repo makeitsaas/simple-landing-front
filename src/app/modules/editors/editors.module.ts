@@ -26,6 +26,9 @@ import { DndTreeService } from './services/dnd-tree.service';
 import { MetaElementStoreService } from './services/meta-element-store.service';
 import { EditorContextService } from './services/editor-context.service';
 import { HelpEditorDialogComponent } from './components/dialog/help-editor-dialog/help-editor-dialog.component';
+import { StylesEditorComponent } from './components/styles-editor/styles-editor.component';
+import { CodeEditorComponent } from './components/code-editor/code-editor.component';
+import { MonacoEditorModule } from 'ngx-monaco-editor';
 
 @NgModule({
   imports: [
@@ -33,6 +36,7 @@ import { HelpEditorDialogComponent } from './components/dialog/help-editor-dialo
     CommonModule,
     EditorsRoutingModule,
     DndModule,
+    MonacoEditorModule.forRoot(),
 
     /* Material Modules */
     MatCardModule,
@@ -47,6 +51,10 @@ import { HelpEditorDialogComponent } from './components/dialog/help-editor-dialo
     BaseEditorComponent,
     FieldsEditorComponent,
     WireframeEditorComponent,
+    StylesEditorComponent,
+
+    CodeEditorComponent,
+
     InlineFieldComponent,
     EditInputComponent,
     AutofocusDirective,

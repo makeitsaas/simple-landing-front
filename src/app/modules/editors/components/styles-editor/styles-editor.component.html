@@ -1,0 +1,25 @@
+<link *ngFor="let url of stylesUrl" rel="stylesheet" [href]="url">
+<div [innerHTML]="compiledStyles" style="text-align: center">
+
+</div>
+<mat-sidenav-container [hasBackdrop]="false">
+  <mat-sidenav
+    [opened]="true"
+    [fixedInViewport]="true">
+    <!-- Available new elements -->
+    <div class="scss-editor">
+      <div class="head">
+        <h3>Edition des styles</h3>
+      </div>
+      <div class="content">
+        <code-editor [(code)]="compiledStyles" (codeChange)="onModelChange()"></code-editor>
+      </div>
+<!--      <textarea [(ngModel)]="textareaModel" (ngModelChange)="onModelChange()"></textarea>-->
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content>
+
+    <div [innerHTML]="layers?.contentHtml" [style]="editableStyles.main"></div>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>

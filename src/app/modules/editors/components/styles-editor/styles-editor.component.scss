@@ -1,0 +1,32 @@
+$editor-head: 40px;
+
+.scss-editor {
+  position: relative;
+  padding: 10px;
+  height: 100%;
+  width: 400px;
+
+  .head {
+    height: $editor-head;
+    margin-bottom: -$editor-head;
+    width: 100%;
+    border-bottom: 1px solid #666;
+
+    h3 {
+      margin: 0;
+      text-align: center;
+    }
+  }
+  .content {
+    padding-top: $editor-head;
+    height: 100%;
+  }
+
+  textarea {
+    width: 400px;
+    min-height: 200px;
+    //height: 90vh;
+    max-width: 100%;
+    resize: none;
+  }
+}
