@@ -1,28 +1,14 @@
+@import '../../scss/editors-mixins';
 $editor-head: 40px;
 
 .sidenav-open {
-  position: fixed;
-  top: 10px;
-  left: 0;
-  padding: 0;
-  height: 34px;
-  line-height: 34px;
-  min-width: 34px;
-  border-bottom-left-radius: 0;
-  border-top-left-radius: 0;
-
-  mat-icon {
-    font-size: 18px;
-    height: 18px;
-    width: 18px;
-  }
+  @include fixed-left-sidenav-toggle;
 }
 
 .scss-editor {
   position: relative;
   padding: 10px;
   height: 100%;
-  width: 500px;
 
   .head {
     position: relative;
@@ -56,6 +42,7 @@ $editor-head: 40px;
   .content {
     padding-top: $editor-head;
     height: 100%;
+    width: 450px;
   }
 
   textarea {

@@ -1,16 +1,16 @@
+@import '../../scss/editors-mixins';
+
 .sidenav-toggle {
-  transition: margin .5s;
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  z-index: 2;
+  @include fixed-left-sidenav-toggle;
+  transition: left .5s;
+  z-index: 2 !important;
   &.active {
     left: -50px;
   }
 }
 
 .dnd-templates {
-  z-index: 20;
+  //z-index: 20;
   padding: 10px 10px;
   background: #FFF;
 
