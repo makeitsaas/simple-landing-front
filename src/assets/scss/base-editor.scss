@@ -4,8 +4,12 @@ header {
 
   .actions {
     position: fixed;
-    top: 7px;
-    right: 20px;
+    top: 0;
+    right: 0;
+    padding: 7px 20px 8px 3px;
+    background: white;
+    border-bottom-left-radius: 10px;
+    box-shadow: 0 8px 10px -5px rgba(0,0,0,.2), 0 16px 24px 2px rgba(0,0,0,.14), 0 6px 30px 5px rgba(0,0,0,.12);
 
     button {
       margin: 0 3px;

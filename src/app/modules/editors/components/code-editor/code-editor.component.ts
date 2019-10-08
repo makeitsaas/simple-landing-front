@@ -8,7 +8,7 @@ import { debounceTime, filter } from 'rxjs/operators';
 })
 export class CodeEditorComponent implements OnInit {
   editorOptions = {theme: 'vs-dark', language: 'scss'};
-  codeDefault = '* {\nbackground: blue;\n}';
+  codeDefault = '';
 
   editorChanges: Subject<string> = new Subject<string>();
 
@@ -19,7 +19,7 @@ export class CodeEditorComponent implements OnInit {
     this.editorChanges
       .pipe(
         debounceTime(1000),
-        filter(() => !this.hasThisMonacoEditorErrors())
+        // filter(() => !this.hasThisMonacoEditorErrors())
         )
       .subscribe(value => {
         this.codeChange.emit(value);

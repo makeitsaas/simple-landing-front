@@ -29,6 +29,7 @@ import { HelpEditorDialogComponent } from './components/dialog/help-editor-dialo
 import { StylesEditorComponent } from './components/styles-editor/styles-editor.component';
 import { CodeEditorComponent } from './components/code-editor/code-editor.component';
 import { MonacoEditorModule } from 'ngx-monaco-editor';
+import { SassService } from './services/sass.service';
 
 @NgModule({
   imports: [
@@ -67,7 +68,8 @@ import { MonacoEditorModule } from 'ngx-monaco-editor';
     ElementDataService,
     DndTreeService,
     MetaElementStoreService,
-    EditorContextService
+    EditorContextService,
+    SassService
   ],
   entryComponents: [
     InlineFieldComponent,
