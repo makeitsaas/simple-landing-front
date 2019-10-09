@@ -1,6 +1,21 @@
 <div class="page-layout">
   <div class="content">
     Account settings
-    <pre>{{sometingResponse || errorResponse | json}}</pre>
+    <pre>{{somethingResponse || errorResponse | json}}</pre>
+
+    <div class="form-group">
+      <label for="file">Choose File</label>
+      <input type="file"
+             id="file"
+             multiple="true"
+             (change)="handleFileInput($event.target.files)">
+
+      <button mat-button (click)="uploadFileToActivity()">Envoyer</button>
+    </div>
+
+    <div *ngFor="let file of uploadedFiles">
+      <img [src]="file.absoluteUrl"/>
+    </div>
+
   </div>
 </div>
