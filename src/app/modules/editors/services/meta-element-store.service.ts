@@ -31,6 +31,7 @@ export class MetaElementStoreService {
   diffList: DiffEntry[] = [];
   prevIndex = 0;
 
+  readonly storeSession = generateUuid();
   private treeChangeSubject = new ReplaySubject<any>(null);
   public treeChange: Observable<any> = this.treeChangeSubject.asObservable();
   private changeSubject = new ReplaySubject<any>(null);

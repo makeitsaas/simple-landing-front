@@ -10,6 +10,11 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { environment } from '@env';
 import { EditorContextService } from '../../services/editor-context.service';
 import { DynamicImgDirective } from '../../directives/dynamic-img.directive';
+import { MatButtonModule, MatDialogModule } from '@angular/material';
+import { EditImageDialogComponent } from '../dialog/edit-image-dialog/edit-image-dialog.component';
+import * as generateUuid from 'uuid/v1';
+import { MetaElementStoreService } from '../../services/meta-element-store.service';
+
 
 @Component({
   templateUrl: './fields-editor.component.html'
@@ -53,21 +58,44 @@ export class FieldsEditorComponent implements OnInit, AfterViewInit {
 
   appendPageAsComponent(layers: IPageLayers) {
     this.compiler.clearCache();
+    const generatedComponentSelector = `local-component-${generateUuid()}`;
     const component = Component({
-      template: layers.contentHtml
+      selector: generatedComponentSelector,
+      template: layers.contentHtml,
+      styles: [`:host {height: 10px; width: 10px;}`]
     })(class {
     });
 
     const module = NgModule({
-      imports: [CommonModule, FormsModule],
-      declarations: [component, InlineFieldComponent, EditInputComponent, AutofocusDirective, DynamicImgDirective, DynamicValueComponent]
+      imports: [
+        CommonModule,
+        FormsModule,
+        MatDialogModule,
+        MatButtonModule,
+      ],
+      declarations: [
+        component,
+        InlineFieldComponent,
+        EditInputComponent,
+        AutofocusDirective,
+        DynamicImgDirective,
+        DynamicValueComponent,
+        // EditImageDialogComponent
+      ],
+      providers: [
+        MetaElementStoreService
+      ],
+      entryComponents: [
+        // EditImageDialogComponent
+      ]
     })(class {
     });
 
     this.compiler.compileModuleAndAllComponentsAsync(module)
       .then(factories => {
+        console.log('factories', factories);
         // Get the component factory.
-        const componentFactory = factories.componentFactories[0];
+        const componentFactory = factories.componentFactories.filter(factory => factory.selector === generatedComponentSelector)[0];
         // Create the component and add to the view.
         const componentRef = this.pageContainer.createComponent(componentFactory);
       });

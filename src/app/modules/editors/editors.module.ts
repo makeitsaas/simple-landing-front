@@ -31,6 +31,7 @@ import { CodeEditorComponent } from './components/code-editor/code-editor.compon
 import { MonacoEditorModule, NgxMonacoEditorConfig } from 'ngx-monaco-editor';
 import { SassService } from './services/sass.service';
 import { DynamicImgDirective } from './directives/dynamic-img.directive';
+import { EditImageDialogComponent } from './components/dialog/edit-image-dialog/edit-image-dialog.component';
 
 const monacoConfig: NgxMonacoEditorConfig = {
   defaultOptions: {
@@ -84,7 +85,8 @@ const monacoConfig: NgxMonacoEditorConfig = {
     BlockElementComponent,
     DynamicValueComponent,
     BlockThumbnailComponent,
-    HelpEditorDialogComponent
+    HelpEditorDialogComponent,
+    EditImageDialogComponent
   ],
   providers: [
     ElementDataService,
@@ -95,7 +97,8 @@ const monacoConfig: NgxMonacoEditorConfig = {
   ],
   entryComponents: [
     InlineFieldComponent,
-    HelpEditorDialogComponent
+    HelpEditorDialogComponent,
+    EditImageDialogComponent
   ]
 })
 export class EditorsModule {

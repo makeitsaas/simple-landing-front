@@ -67,6 +67,7 @@ export class WireframeEditorComponent implements OnInit {
       this.dndTreeService.afterSetupCleanPositions(this.pageTree);
     });
     this.metaElementStore.treeChange.subscribe(element => this.onElementLocation(element));
+    console.log('store session', this.metaElementStore.storeSession);
   }
 
   toggleContainer(element: MetaElement) {
