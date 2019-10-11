@@ -11,7 +11,6 @@ import { environment } from '@env';
 import { EditorContextService } from '../../services/editor-context.service';
 import { DynamicImgDirective } from '../../directives/dynamic-img.directive';
 import { MatButtonModule, MatDialogModule } from '@angular/material';
-import { EditImageDialogComponent } from '../dialog/edit-image-dialog/edit-image-dialog.component';
 import * as generateUuid from 'uuid/v1';
 import { MetaElementStoreService } from '../../services/meta-element-store.service';
 
@@ -80,13 +79,11 @@ export class FieldsEditorComponent implements OnInit, AfterViewInit {
         AutofocusDirective,
         DynamicImgDirective,
         DynamicValueComponent,
-        // EditImageDialogComponent
       ],
       providers: [
         MetaElementStoreService
       ],
       entryComponents: [
-        // EditImageDialogComponent
       ]
     })(class {
     });

@@ -1,5 +1,5 @@
 export interface ElementDataInterface {
-  id: string;
+  id: string|number;
   type: string;
   settings: any;
   fields: any;
@@ -11,7 +11,7 @@ export interface ElementDataInterface {
 }
 
 export class ElementData implements ElementDataInterface {
-  readonly id: string;
+  readonly id: string|number;
   readonly type: string;
   readonly settings: any = {};
   readonly fields: {readonly [key: string]: any} = {};

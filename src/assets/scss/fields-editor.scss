@@ -1,0 +1,7 @@
+img[dynamic-img] {
+  cursor: pointer;
+
+  &:hover {
+    opacity: .5;
+  }
+}

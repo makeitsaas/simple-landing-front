@@ -8,7 +8,7 @@ export const MetaElementStore = {
   },
 
   findMetaByElementId(elementId: string | number): MetaElement | void {
-    return allMetaElements.filter(meta => meta.data.id === elementId)[0];
+    return allMetaElements.filter(meta => meta.data.id === elementId || parseFloat(`${meta.data.id}`) === parseFloat(`${elementId}`))[0];
   },
 
   findMetaByLocalId(localId: number): MetaElement | void {

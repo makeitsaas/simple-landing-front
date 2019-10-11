@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AssetsInterface } from '../interfaces/assets.interface';
 import { DnDItem } from './dnd-tree.service';
-import { ElementDataInterface } from '../entities/element-data';
+import { ElementData, ElementDataInterface } from '../entities/element-data';
 
 export interface IPageLayers {
   styles: AssetsInterface[];
@@ -37,6 +37,12 @@ export class ElementDataService {
   getPageLayers(pageId: string): Observable<IPageLayers> {
     return this.http.get(environment.APIUrl + `/pages/${pageId}/layers`).pipe(map((response: any) => {
       return response;
+    }));
+  }
+
+  getElement(dataElementId: string): Observable<ElementDataInterface> {
+    return this.http.get(environment.APIUrl + `/elements/${dataElementId}`).pipe(map((elementData: ElementDataInterface) => {
+      return elementData;
     }));
   }
 

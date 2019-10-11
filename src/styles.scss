@@ -21,9 +21,14 @@ img {
   &.debug-style {
     @import "assets/scss/debug-style";
   }
+
+  .wireframe-editor {
+    @import "assets/scss/wireframe-editor";
+  }
+
+  .fields-editor {
+    @import "assets/scss/fields-editor";
+  }
 }
 
-.wireframe-editor {
-  @import "assets/scss/wireframe-editor";
-}
 

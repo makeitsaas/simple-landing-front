@@ -98,7 +98,10 @@ export class MetaElement {
         value: this.data.fields[key]
       }
     });
-    this.storeDiffCallback(diff);
+
+    if (nextValue !== this.data.fields[key]) {
+      this.storeDiffCallback(diff);
+    }
   }
 
   setTranslation(key: string, value: string, currentLang: string = this.currentLang) {

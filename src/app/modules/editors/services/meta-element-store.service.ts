@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { MetaElement } from '../entities/meta-element';
-import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of, ReplaySubject } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import { ElementDataService, UpdateElementDto } from './element-data.service';
 import { HttpClient } from '@angular/common/http';
-import { ElementData } from '../entities/element-data';
+import { ElementData, ElementDataInterface } from '../entities/element-data';
 import { ElementDataDiff } from '../entities/element-data-diff';
 import { MetaElementStore } from '../store/meta-element.store';
 import * as generateUuid from 'uuid/v1';
@@ -35,13 +35,21 @@ export class MetaElementStoreService {
   private treeChangeSubject = new ReplaySubject<any>(null);
   public treeChange: Observable<any> = this.treeChangeSubject.asObservable();
   private changeSubject = new ReplaySubject<any>(null);
-  public change: Observable<any> = this.changeSubject.asObservable();
+  public change: Observable<MetaElement> = this.changeSubject.asObservable();
 
   constructor(
     private http: HttpClient,
     private elementDataService: ElementDataService,
     private editorContextService: EditorContextService
   ) {
+  }
+
+  watchElement(elementDataId: string|number): Observable<MetaElement> {
+    return this.change.pipe(filter(diff => diff && (diff.data.id === elementDataId || `${diff.data.id}` === `${elementDataId}`)));
+  }
+
+  watchMetaElement(localId: number): Observable<MetaElement> {
+    return this.change.pipe(filter(diff => diff && diff.localId === localId));
   }
 
   getNewMetaElement(options: ElementData | any, pageId: string = this.editorContextService.getCurrentPageId()): MetaElement {
@@ -72,20 +80,36 @@ export class MetaElementStoreService {
     return metaElement;
   }
 
+  getMetaElementByElementId(dataElementId: string): Observable<MetaElement> {
+    const existingMeta = MetaElementStore.findMetaByElementId(dataElementId);
+    if (existingMeta) {
+      console.log('retrieved from cache');
+      return of(existingMeta);
+    }
+    return this.elementDataService.getElement(dataElementId).pipe(map(data => {
+      console.log('retrieved from api');
+      return this.getOrCreateMetaElement(data);
+    }));
+  }
+
   getPageMetaElements(pageId: string): Observable<MetaElement[]> {
     return this.elementDataService.getPageElements(pageId).pipe(map(elements => {
       return elements.map(data => {
-        const existingMeta = MetaElementStore.findMetaByElementId(data.id);
-        if (existingMeta) {
-          existingMeta.setRemoteDataResponse(data, []);
-          return existingMeta;
-        } else {
-          return this.getNewMetaElement(data);
-        }
+        return this.getOrCreateMetaElement(data);
       });
     })).pipe(metaElements => {
       return metaElements;
     });
+  }
+
+  private getOrCreateMetaElement(data: ElementDataInterface): MetaElement {
+    const existingMeta = MetaElementStore.findMetaByElementId(data.id);
+    if (existingMeta) {
+      existingMeta.setRemoteDataResponse(data, []);
+      return existingMeta;
+    } else {
+      return this.getNewMetaElement(data);
+    }
   }
 
   canGoNext() {
