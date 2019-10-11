@@ -11,12 +11,13 @@ export class AccountSettingsPageComponent implements OnInit {
   somethingResponse: any;
   errorResponse: any;
   filesToUpload: File[];
-  uploadedFiles: UploadedFile[]|void;
+  uploadedFiles: UploadedFile[] | void;
 
   constructor(
     private settingsService: SettingsService,
     private uploadService: UploadService
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
     this.settingsService.getSomething().subscribe(something => {

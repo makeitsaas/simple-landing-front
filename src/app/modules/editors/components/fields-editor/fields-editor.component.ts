@@ -9,6 +9,7 @@ import { DynamicValueComponent } from '../../forms/inputs/dynamic-value/dynamic-
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { environment } from '@env';
 import { EditorContextService } from '../../services/editor-context.service';
+import { DynamicImgDirective } from '../../directives/dynamic-img.directive';
 
 @Component({
   templateUrl: './fields-editor.component.html'
@@ -59,7 +60,7 @@ export class FieldsEditorComponent implements OnInit, AfterViewInit {
 
     const module = NgModule({
       imports: [CommonModule, FormsModule],
-      declarations: [component, InlineFieldComponent, EditInputComponent, AutofocusDirective, DynamicValueComponent]
+      declarations: [component, InlineFieldComponent, EditInputComponent, AutofocusDirective, DynamicImgDirective, DynamicValueComponent]
     })(class {
     });
 

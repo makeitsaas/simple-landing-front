@@ -30,6 +30,7 @@ import { StylesEditorComponent } from './components/styles-editor/styles-editor.
 import { CodeEditorComponent } from './components/code-editor/code-editor.component';
 import { MonacoEditorModule, NgxMonacoEditorConfig } from 'ngx-monaco-editor';
 import { SassService } from './services/sass.service';
+import { DynamicImgDirective } from './directives/dynamic-img.directive';
 
 const monacoConfig: NgxMonacoEditorConfig = {
   defaultOptions: {
@@ -64,16 +65,22 @@ const monacoConfig: NgxMonacoEditorConfig = {
     MatSidenavModule,
   ],
   declarations: [
+    // editors
     BaseEditorComponent,
     FieldsEditorComponent,
     WireframeEditorComponent,
     StylesEditorComponent,
 
+    // monaco wrapper
     CodeEditorComponent,
 
+    // directives
+    AutofocusDirective,
+    DynamicImgDirective,
+
+    // other components
     InlineFieldComponent,
     EditInputComponent,
-    AutofocusDirective,
     BlockElementComponent,
     DynamicValueComponent,
     BlockThumbnailComponent,

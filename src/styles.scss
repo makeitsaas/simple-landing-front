@@ -18,7 +18,11 @@ img {
 .base-editor {
   @import "assets/scss/base-editor";
 
+  &.debug-style {
+    @import "assets/scss/debug-style";
+  }
 }
+
 .wireframe-editor {
   @import "assets/scss/wireframe-editor";
 }

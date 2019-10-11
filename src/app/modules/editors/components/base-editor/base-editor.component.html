@@ -1,4 +1,4 @@
-<div class="base-editor">
+<div class="base-editor" [class.debug-style]="debugStyles">
   <!-- header -->
   <header>
 
@@ -25,8 +25,16 @@
       </mat-menu>
 
       <button mat-button
+              (click)="debugStyles = !debugStyles"
+              title="{{debugStyles ? 'Hide':'Show'}} borders"
+              style="margin-left: 0; background: transparent; border: none; color: #000">
+        <mat-icon *ngIf="debugStyles" aria-hidden="false" aria-label="Help">visibility</mat-icon>
+        <mat-icon *ngIf="!debugStyles" aria-hidden="false" aria-label="Help">visibility_off</mat-icon>
+      </button>
+
+      <button mat-button
               (click)="showHelp()"
-              style="margin: 0 5px; background: transparent; border: none; color: #000">
+              style="background: transparent; border: none; color: #000">
         <mat-icon aria-hidden="false" aria-label="Help">help</mat-icon>
       </button>
     </div>

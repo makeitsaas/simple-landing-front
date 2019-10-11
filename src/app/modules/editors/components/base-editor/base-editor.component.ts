@@ -14,6 +14,7 @@ export class BaseEditorComponent implements OnInit {
   pendingSave = false;
   canGoPrev = false;
   canGoNext = false;
+  debugStyles = false;
 
   constructor(
     private htmlElementsService: ElementDataService,
@@ -55,7 +56,7 @@ export class BaseEditorComponent implements OnInit {
 
   showHelp() {
     const dialogRef = this.dialog.open(HelpEditorDialogComponent, {
-      // width: '250px',
+      width: '400px',
       data: {}
     });
 
