@@ -32,6 +32,7 @@ export interface DnDItem {
 }
 
 export interface DnDItemTemplate {
+  disable?: any;
   content: string;
   type: string;
   cols?: number;

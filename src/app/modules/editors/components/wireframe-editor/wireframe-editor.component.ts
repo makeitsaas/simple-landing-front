@@ -31,7 +31,7 @@ const templatesList: DnDItemTemplate[] = [
     children: [columnTemplate, columnTemplate]
   },
   {
-    content: 'Block',
+    content: 'Text block',
     type: 'block',
     children: []
   },
@@ -43,15 +43,17 @@ const templatesList: DnDItemTemplate[] = [
   styleUrls: ['wireframe-editor.component.scss']
 })
 export class WireframeEditorComponent implements OnInit, OnDestroy {
-  itemTemplates: DnDItemTemplate[] = templatesList;
+  elementsTemplatesByCategory: { category: string, title: string, templates: DnDItemTemplate[] }[] = [
+    {category: 'core', title: 'Structure templates', templates: templatesList.slice(0, 2)},
+    {category: 'generic', title: 'Common templates', templates: templatesList.slice(2, 3)}
+  ];
   pageTree: DnDItem;
+  showTemplates = false;
 
   private currentDraggableEvent: DragEvent;
   private currentDragEffectMsg: string;
   private pageId;
   private currentDragItem: DnDItem | void;
-  showTemplates = false;
-
   private subscriptions: Subscription[] = [];
 
   constructor(
@@ -81,7 +83,8 @@ export class WireframeEditorComponent implements OnInit, OnDestroy {
   }
 
   toggleContainer(element: MetaElement) {
-    element.setField('container', element.data.fields.container === 'fluid' ? null : 'fluid');
+    console.log('toggleContainer was a demo feature, disabled now');
+    // element.setField('container', element.data.fields.container === 'fluid' ? null : 'fluid');
   }
 
   toggleColumnsWidth(item: DnDItem) {

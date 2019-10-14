@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { ElementDataService } from '../../../services/element-data.service';
 import { EditorContextService } from '../../../services/editor-context.service';
 import { MetaElementStoreService } from '@modules/editors/services/meta-element-store.service';

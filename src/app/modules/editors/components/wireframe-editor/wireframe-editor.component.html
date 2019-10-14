@@ -14,7 +14,7 @@
       <!-- Available new elements -->
       <div class="dnd-templates">
 
-        <ng-container *ngTemplateOutlet="storeItems; context:{ $implicit: itemTemplates }"></ng-container>
+        <ng-container *ngTemplateOutlet="templatesByCategory"></ng-container>
 
       </div>
     </mat-sidenav>
@@ -42,21 +42,25 @@
 </div>
 
 
-<ng-template #storeItems let-store>
-  <div class="dnd-templates-item"
-       *ngFor="let storeItem of store"
-       [dndDraggable]="storeItem"
-       [dndType]="storeItem.type"
-       dndEffectAllowed="copy"
-       [dndDisableIf]="storeItem.disable"
-       (dndStart)="onDragStart($event)"
-       (dndCopied)="onDragged(storeItem, store, 'copy')"
-       (dndLinked)="onDragged(storeItem, store, 'link')"
-       (dndMoved)="onDragged(storeItem, store, 'move')"
-       (dndCanceled)="onDragged(storeItem, store, 'none')"
-       (dndEnd)="onDragEnd($event)">
-    {{storeItem.content}}
+<ng-template #templatesByCategory>
+  <div class="category" *ngFor="let category of elementsTemplatesByCategory">
+    <div class="title">{{category.title}}</div>
+    <div class="dnd-templates-item"
+         *ngFor="let storeItem of category.templates"
+         [dndDraggable]="storeItem"
+         [dndType]="storeItem.type"
+         dndEffectAllowed="copy"
+         [dndDisableIf]="storeItem.disable"
+         (dndStart)="onDragStart($event)"
+         (dndCopied)="onDragged(storeItem, category.templates, 'copy')"
+         (dndLinked)="onDragged(storeItem, category.templates, 'link')"
+         (dndMoved)="onDragged(storeItem, category.templates, 'move')"
+         (dndCanceled)="onDragged(storeItem, category.templates, 'none')"
+         (dndEnd)="onDragEnd($event)">
+      {{storeItem.content}}
+    </div>
   </div>
+
 </ng-template>
 
 <ng-template #recursiveList
