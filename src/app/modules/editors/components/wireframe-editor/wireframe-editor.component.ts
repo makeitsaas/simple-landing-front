@@ -33,7 +33,14 @@ const templatesList: DnDItemTemplate[] = [
   {
     content: 'Text block',
     type: 'block',
-    children: []
+    children: [],
+    fields: {},
+  },
+  {
+    content: 'Text Image',
+    type: 'block',
+    children: [],
+    settings: {blockType: 'text-image'},
   },
 ];
 
@@ -45,7 +52,7 @@ const templatesList: DnDItemTemplate[] = [
 export class WireframeEditorComponent implements OnInit, OnDestroy {
   elementsTemplatesByCategory: { category: string, title: string, templates: DnDItemTemplate[] }[] = [
     {category: 'core', title: 'Structure templates', templates: templatesList.slice(0, 2)},
-    {category: 'generic', title: 'Common templates', templates: templatesList.slice(2, 3)}
+    {category: 'generic', title: 'Common templates', templates: templatesList.slice(2, 4)}
   ];
   pageTree: DnDItem;
   showTemplates = false;
@@ -96,8 +103,8 @@ export class WireframeEditorComponent implements OnInit, OnDestroy {
     this.currentDragEffectMsg = '';
     this.currentDraggableEvent = event;
 
-    this.snackBarService.dismiss();
-    this.snackBarService.open('Drag started!', undefined, {duration: 2000});
+    // this.snackBarService.dismiss();
+    // this.snackBarService.open('Drag started!', undefined, {duration: 2000});
   }
 
   onDragged(item: any, list: any[], effect: DropEffect) {
@@ -152,6 +159,9 @@ export class WireframeEditorComponent implements OnInit, OnDestroy {
       this.dndTreeService.afterSetupCleanPositions(newParent || initialParent);
     } else {
       console.log('onElementLocation => nothing to do', metaElement.treeLocation, this.currentDragItem);
+      if (initialParent) {
+        this.dndTreeService.afterSetupCleanPositions(initialParent);
+      }
     }
   }
 

@@ -67,7 +67,7 @@ export class MetaElementStoreService {
     if (!options || !options.id) {
       const requestDate = new Date();
       // there need to create an element on the API side
-      this.elementDataService.createElement(pageId, options.type).subscribe(elementData => {
+      this.elementDataService.createElement(pageId, options.type, {settings: options.settings}).subscribe(elementData => {
         metaElement.setRemoteDataResponse(elementData, this.getDiffsSinceDate(requestDate, metaElement));
       });
     }
@@ -214,23 +214,7 @@ export class MetaElementStoreService {
       let key: string;
       switch (entry.diff.action) {
         case 'updateLocation':
-          const location = entry.metaElement.treeLocation;
-          if (location) {
-            const siblings: MetaElement[] = MetaElementStore.findMetaSiblings(entry.metaElement);
-            const parentMeta = MetaElementStore.findMetaByLocalId(location.parentMetaElementId);
-            if (parentMeta) {
-              siblings.forEach(meta => {
-                if (!dtoById[meta.data.id]) {
-                  dtoById[meta.data.id] = {};
-                }
-                dtoById[meta.data.id].parent = parentMeta.data.id;
-                dtoById[meta.data.id].position = meta.treeLocation && meta.treeLocation.position;
-              });
-            }
-          } else {
-            dtoById[elementId].parent = null;
-          }
-
+          this.updatePositionsInDto(entry.metaElement, dtoById);
           break;
         case 'updateField':
           key = entry.diff.nextValue.key;
@@ -261,17 +245,33 @@ export class MetaElementStoreService {
 
   private addNewElementsPositionToDto(pageId: string, dtoById: { [elementId: number]: UpdateElementDto }) {
     const newMetaElements = MetaElementStore.findNewMetaElements(pageId);
-    newMetaElements.forEach(metaElement => {
-      const elementId = metaElement.data.id;
-      if (metaElement.treeLocation) {
-        const parentMeta = MetaElementStore.findMetaByLocalId(metaElement.treeLocation.parentMetaElementId);
-        if (!dtoById[elementId]) {
-          dtoById[elementId] = {};
-        }
-        dtoById[elementId].parent = parentMeta && parentMeta.data.id;
-        dtoById[elementId].position = metaElement.treeLocation.position;
-      }
 
-    });
+    newMetaElements.forEach(metaElement => this.updatePositionsInDto(metaElement, dtoById));
+  }
+
+  /**
+   * Updates position and parent for metaElement.data and siblings
+   *
+   * @param metaElement metaElement that has moved since last save
+   * @param dtoById object that contains data about elements that will be saved with ElementDataService.updateElement
+   */
+  private updatePositionsInDto(metaElement: MetaElement, dtoById: { [elementId: number]: UpdateElementDto }) {
+    const metaElementId = metaElement.localId;
+    const location = metaElement.treeLocation;
+    if (location) {
+      const siblings: MetaElement[] = MetaElementStore.findMetaSiblings(metaElement);
+      const parentMeta = MetaElementStore.findMetaByLocalId(location.parentMetaElementId);
+      if (parentMeta) {
+        siblings.forEach(meta => {
+          if (!dtoById[meta.data.id]) {
+            dtoById[meta.data.id] = {};
+          }
+          dtoById[meta.data.id].parent = parentMeta.data.id;
+          dtoById[meta.data.id].position = meta.treeLocation && meta.treeLocation.position;
+        });
+      }
+    } else {
+      dtoById[metaElementId].parent = null;
+    }
   }
 }

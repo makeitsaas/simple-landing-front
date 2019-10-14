@@ -37,6 +37,9 @@ export interface DnDItemTemplate {
   type: string;
   cols?: number;
   children: DnDItemTemplate[];
+  fields?: any;
+  settings?: any;
+  translations?: any;
 }
 
 @Injectable()
