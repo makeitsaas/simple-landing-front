@@ -13,6 +13,7 @@ import { DynamicImgDirective } from '../../directives/dynamic-img.directive';
 import { MatButtonModule, MatDialogModule } from '@angular/material';
 import * as generateUuid from 'uuid/v1';
 import { MetaElementStoreService } from '../../services/meta-element-store.service';
+import { SharedModule } from '@shared/shared.module';
 
 
 @Component({
@@ -69,6 +70,7 @@ export class FieldsEditorComponent implements OnInit, AfterViewInit {
       imports: [
         CommonModule,
         FormsModule,
+        SharedModule,
         MatDialogModule,
         MatButtonModule,
       ],

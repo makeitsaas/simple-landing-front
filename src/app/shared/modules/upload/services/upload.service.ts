@@ -5,10 +5,10 @@ import { map } from 'rxjs/operators';
 
 interface UploadFileResponse {
   message: string;
-  files: UploadedFile[];
+  files: MediaFile[];
 }
 
-export interface UploadedFile {
+export interface MediaFile {
   uuid: string;
   relativeUrl: string;
   absoluteUrl: string;
@@ -23,8 +23,8 @@ export class UploadService {
   ) {
   }
 
-  postFile(filesToUpload: File[] | File | {[key: string]: File}): Observable<UploadedFile[]> {
-    const endPoint = 'http://localhost:3006/upload';
+  postFile(filesToUpload: File[] | File | {[key: string]: File}): Observable<MediaFile[]> {
+    const endPoint = 'http://localhost:3006/upload';  // todo : get from environment or discovery
     const formData: FormData = new FormData();
     if (filesToUpload instanceof File) {
       formData.append('file-0', filesToUpload, filesToUpload.name);

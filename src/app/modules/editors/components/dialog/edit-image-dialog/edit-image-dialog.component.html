@@ -1,9 +1,11 @@
 <h1 mat-dialog-title>Hello </h1>
 <div mat-dialog-content>
   <p>How R U?</p>
-  <pre>{{inputData|json}}</pre>
+  <app-shared-upload-area [(valid)]="valid" [(medias)]="medias"></app-shared-upload-area>
+  <pre>{{ {valid: valid, medias: medias} |json }}</pre>
 </div>
 <div mat-dialog-actions>
   <!--  <button mat-button>No Thanks</button>-->
-  <button mat-button [mat-dialog-close]="false" cdkFocusInitial>Ok</button>
+  <button mat-raised-button color="primary" (click)="done()" [disabled]="!valid">Ok</button>
+  <button mat-button [mat-dialog-close]="false">Cancel</button>
 </div>

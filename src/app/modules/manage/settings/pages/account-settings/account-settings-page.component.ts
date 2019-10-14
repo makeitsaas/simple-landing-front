@@ -1,21 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
-import { UploadedFile, UploadService } from '../../../../../shared/services/upload.service';
+import { MediaFile } from '@shared/modules/upload/services/upload.service';
 
 @Component({
   templateUrl: './account-settings-page.component.html',
   styleUrls: ['./account-settings-page.component.scss']
 })
 export class AccountSettingsPageComponent implements OnInit {
-
   somethingResponse: any;
   errorResponse: any;
-  filesToUpload: File[];
-  uploadedFiles: UploadedFile[] | void;
+  medias: MediaFile[] = [];
 
   constructor(
-    private settingsService: SettingsService,
-    private uploadService: UploadService
+    private settingsService: SettingsService
   ) {
   }
 
@@ -24,21 +21,6 @@ export class AccountSettingsPageComponent implements OnInit {
       this.somethingResponse = something;
     }, error => {
       this.errorResponse = error;
-    });
-  }
-
-  handleFileInput(files: FileList) {
-    this.filesToUpload = Array.from(files);
-  }
-
-  uploadFileToActivity() {
-    this.uploadService.postFile(this.filesToUpload).subscribe(uploadedFiles => {
-      // do something, if upload success
-      console.log('the data', uploadedFiles);
-      this.uploadedFiles = uploadedFiles;
-    }, error => {
-      console.log(error);
-      delete this.uploadedFiles;
     });
   }
 }

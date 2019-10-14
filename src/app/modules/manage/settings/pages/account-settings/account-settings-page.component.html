@@ -3,19 +3,10 @@
     Account settings
     <pre>{{somethingResponse || errorResponse | json}}</pre>
 
-    <div class="form-group">
-      <label for="file">Choose File</label>
-      <input type="file"
-             id="file"
-             multiple="true"
-             (change)="handleFileInput($event.target.files)">
+    <app-shared-upload-area [(medias)]="medias"></app-shared-upload-area>
 
-      <button mat-button (click)="uploadFileToActivity()">Envoyer</button>
-    </div>
-
-    <div *ngFor="let file of uploadedFiles">
+    <div *ngFor="let file of medias">
       <img [src]="file.absoluteUrl"/>
     </div>
-
   </div>
 </div>

@@ -1,0 +1,10 @@
+<div class="form-group">
+  <label for="file">Choose File</label>
+  <input type="file"
+         id="file"
+         multiple="true"
+         (change)="onInputFiles($event.target.files)">
+  <div *ngFor="let file of filesToUpload">
+    {{file.name}}
+  </div>
+</div>

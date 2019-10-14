@@ -3,7 +3,7 @@ import { AccountSettingsPageComponent } from './pages/account-settings/account-s
 import { SettingsRoutingModule } from './settings-routing.module';
 import { SettingsService } from './services/settings.service';
 import { CommonModule } from '@angular/common';
-import { SharedModule } from '../../../shared/shared.module';
+import { SharedModule } from '@shared/shared.module';
 import { MatButtonModule } from '@angular/material';
 
 @NgModule({

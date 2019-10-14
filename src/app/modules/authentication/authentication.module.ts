@@ -7,7 +7,7 @@ import { LocalLoginComponent } from './components/local-login/local-login.compon
 import { AuthService, jwtOptionsFactory } from './services/auth.service';
 import { OauthCallbackComponent } from './pages/oauth-callback/oauth-callback.component';
 import { AuthenticationRoutingModule } from './authentication-routing.module';
-import { SharedModule } from '../../shared/shared.module';
+import { SharedModule } from '@shared/shared.module';
 import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt';
 
 @NgModule({

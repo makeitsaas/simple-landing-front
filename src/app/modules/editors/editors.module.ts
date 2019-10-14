@@ -32,6 +32,7 @@ import { MonacoEditorModule, NgxMonacoEditorConfig } from 'ngx-monaco-editor';
 import { SassService } from './services/sass.service';
 import { DynamicImgDirective } from './directives/dynamic-img.directive';
 import { EditImageDialogComponent } from './components/dialog/edit-image-dialog/edit-image-dialog.component';
+import { SharedModule } from '@shared/shared.module';
 
 const monacoConfig: NgxMonacoEditorConfig = {
   defaultOptions: {
@@ -52,6 +53,7 @@ const monacoConfig: NgxMonacoEditorConfig = {
   imports: [
     FormsModule,
     CommonModule,
+    SharedModule,
     EditorsRoutingModule,
     DndModule,
     MonacoEditorModule.forRoot(monacoConfig),

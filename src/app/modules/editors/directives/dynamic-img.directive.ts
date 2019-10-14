@@ -1,6 +1,6 @@
 import { Directive, ElementRef, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { EditImageDialogComponent } from '../components/dialog/edit-image-dialog/edit-image-dialog.component';
+import { EditImageDialogComponent, EditImageDialogRef } from '../components/dialog/edit-image-dialog/edit-image-dialog.component';
 import { MetaElementStoreService } from '../services/meta-element-store.service';
 import { MetaElement } from '../entities/meta-element';
 import { Subscription } from 'rxjs';
@@ -60,16 +60,19 @@ export class DynamicImgDirective implements OnInit, OnDestroy {
   }
 
   private openDialog() {
-    const dialogRef = this.dialog.open(EditImageDialogComponent, {
+    const dialogRef: EditImageDialogRef = this.dialog.open(EditImageDialogComponent, {
       width: '400px',
       data: {
         metaElement: this.metaElement
       }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
-      this.metaElement.setField(this.getFieldUuidKey(), 'b0d8cfe0-ea90-11e9-91cd-35b843176917');
+    dialogRef.afterClosed().subscribe(media => {
+      console.log('The dialog was closed', media);
+      if (media) {
+        const url = 'http://localhost:3006/assets/files/1cee24b0-ea90-11e9-a5ce-5dde280071d4.png';
+        this.metaElement.setField(this.getImageUrlFieldKey(), media.absoluteUrl);
+      }
     });
   }
 
@@ -77,13 +80,14 @@ export class DynamicImgDirective implements OnInit, OnDestroy {
     return `_image_${this.dataMediaIndex}_uuid`;
   }
 
-  private getSrc() {
-    const fieldUuidValue = this.metaElement && this.metaElement.data.fields[this.getFieldUuidKey()];
+  private getImageUrlFieldKey() {
+    return `_image_${this.dataMediaIndex}_url`;
+  }
 
-    if (fieldUuidValue) {
-      return `http://localhost:3006/assets/files/${fieldUuidValue}.png`;
-    } else {
-      return '/assets/img/image-placeholder.png';
-    }
+  private getSrc() {
+    // const fieldUuidValue = this.metaElement && this.metaElement.data.fields[this.getFieldUuidKey()];
+    const imageUrl = this.metaElement && this.metaElement.data.fields[this.getImageUrlFieldKey()];
+
+    return imageUrl || '/assets/img/image-placeholder.png';
   }
 }
