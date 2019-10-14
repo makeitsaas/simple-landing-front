@@ -1,59 +1,70 @@
-import { Component, ElementRef, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ElementDataService } from '../../../services/element-data.service';
 import { EditorContextService } from '../../../services/editor-context.service';
+import { MetaElementStoreService } from '@modules/editors/services/meta-element-store.service';
+import { Subscription } from 'rxjs';
+import { MetaElement } from '@modules/editors/entities/meta-element';
 
 @Component({
   selector: 'dynamic-value',
   templateUrl: './dynamic-value.component.html'
 })
-export class DynamicValueComponent implements OnInit {
+export class DynamicValueComponent implements OnInit, OnDestroy {
 
-  @Input('id') dataId: string | number;
+  @Input('id') dataId: string;
   @Input('code') dataCode: string;
 
+  private dataType: string | 'fields' | 'translations';
+  private dataKey: string;
+  private currentLang: string;
+
   sampleModel = '';
+
+  private metaElement: MetaElement;
+  private metaElementChanges: Subscription;
 
   constructor(
     private el: ElementRef,
     private htmlElementsService: ElementDataService,
+    private metaElementStoreService: MetaElementStoreService,
     private editorContextService: EditorContextService
   ) {
   }
 
   ngOnInit() {
+    this.currentLang = this.editorContextService.getCurrentLanguageCode();
     this.sampleModel = this.el.nativeElement.textContent;
+    this.metaElementStoreService.getMetaElementByElementId(this.dataId).subscribe(metaElement => this.metaElement = metaElement);
+    this.metaElementChanges = this.metaElementStoreService
+      .watchElement(this.dataId)
+      .subscribe(metaElement => this.onMetaElement(metaElement));
+    this.dataType = this.dataCode.split('.')[0];
+    this.dataKey = this.dataCode.split('.').slice(1).join('.');
+  }
+
+  ngOnDestroy() {
+    this.metaElementChanges.unsubscribe();
+  }
+
+  onMetaElement(metaElement: MetaElement) {
+    this.metaElement = metaElement;
+    this.sampleModel = this.getElementValue();
+  }
+
+  getElementValue() {
+    if (this.dataType === 'translations') {
+      return this.metaElement.getTranslation(this.dataKey);
+    } else if (this.dataType === 'fields') {
+      return this.metaElement.getField(this.dataKey);
+    }
   }
 
   saveEditable(newValue: string) {
-    // console.log(`save element(${this.dataId})[${this.dataCode}]`, newValue);
     this.sampleModel = newValue;
-    const putOptions = this.assignDotKey({}, this.dataCode, newValue);
-    if (putOptions.translations) {
-      const lang = this.editorContextService.getCurrentLanguageCode();
-      const translations = putOptions.translations;
-      putOptions.translations = {[lang]: translations};
+    if (this.dataType === 'translations') {
+      return this.metaElement.setTranslation(this.dataKey, newValue);
+    } else if (this.dataType === 'fields') {
+      return this.metaElement.setField(this.dataKey, newValue);
     }
-    this.htmlElementsService.updateElement(this.dataId, putOptions)
-      .subscribe(() => console.log('success'), err => this.onError(err));
-  }
-
-  onError(err?: Error) {
-    console.log('dynamic value error', err);
-  }
-
-  assignDotKey(obj, dotKey, value) {
-    const keys = dotKey.split('.');
-    const first = keys.shift();
-
-    if (first) {
-      if (keys.length) {
-        obj[first] = this.assignDotKey(obj[first] || {}, keys.join('.'), value);
-      } else {
-        obj[first] = value;
-      }
-    }
-
-
-    return obj;
   }
 }

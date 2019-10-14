@@ -211,6 +211,7 @@ export class MetaElementStoreService {
       if (!dtoById[elementId]) {
         dtoById[elementId] = {};
       }
+      let key: string;
       switch (entry.diff.action) {
         case 'updateLocation':
           const location = entry.metaElement.treeLocation;
@@ -232,11 +233,26 @@ export class MetaElementStoreService {
 
           break;
         case 'updateField':
+          key = entry.diff.nextValue.key;
+
           if (!dtoById[elementId].fields) {
             dtoById[elementId].fields = {};
           }
-          const key: string = entry.diff.nextValue.key;
+
           dtoById[elementId].fields[key] = localData.fields[key];
+          break;
+        case 'updateTranslation':
+          const diffLang = entry.diff.nextValue.lang;
+          key = entry.diff.nextValue.key;
+
+          if (!dtoById[elementId].translations) {
+            dtoById[elementId].translations = {};
+          }
+          if (!dtoById[elementId].translations[diffLang]) {
+            dtoById[elementId].translations[diffLang] = {};
+          }
+
+          dtoById[elementId].translations[diffLang][key] = localData.translations[diffLang][key];
           break;
       }
     });

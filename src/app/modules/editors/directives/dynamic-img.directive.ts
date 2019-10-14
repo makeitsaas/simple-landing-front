@@ -70,7 +70,6 @@ export class DynamicImgDirective implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(media => {
       console.log('The dialog was closed', media);
       if (media) {
-        const url = 'http://localhost:3006/assets/files/1cee24b0-ea90-11e9-a5ce-5dde280071d4.png';
         this.metaElement.setField(this.getImageUrlFieldKey(), media.absoluteUrl);
       }
     });

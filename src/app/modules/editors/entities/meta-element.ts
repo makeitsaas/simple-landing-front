@@ -45,6 +45,7 @@ export interface TreeLocation {
 export class MetaElement {
   public localId = nextLocalId++;
   private currentLang = 'en';
+  private defaultLang = 'en';
   private saveReadyResolve: (value?: any) => void;
 
   data: ElementData;            // preferably immutable
@@ -55,6 +56,20 @@ export class MetaElement {
 
   constructor(data: ElementData | any = {type: 'block'}) {
     this.applyDataChange(data);
+  }
+
+  /*
+    External getters
+   */
+  getField(key: string) {
+    return this.data.fields[key];
+  }
+
+  getTranslation(key: string, lang: string = this.currentLang) {
+    const langTranslation = this.data.translations[lang] || {};
+    const defaultTranslation = this.data.translations[this.defaultLang] || {};
+
+    return langTranslation[key] || defaultTranslation[key];
   }
 
   /*
@@ -104,8 +119,25 @@ export class MetaElement {
     }
   }
 
-  setTranslation(key: string, value: string, currentLang: string = this.currentLang) {
+  setTranslation(key: string, nextValue: string, lang: string = this.currentLang) {
+    const currentValue = this.getTranslation(key, lang);
+    const diff = new ElementDataDiff({
+      action: 'updateTranslation',
+      nextValue: {
+        lang,
+        key,
+        value: nextValue
+      },
+      previousValue: {
+        lang,
+        key,
+        value: currentValue
+      }
+    });
 
+    if (nextValue !== currentValue) {
+      this.storeDiffCallback(diff);
+    }
   }
 
   setCleanedPosition(cleanPosition: number, parentMetaElementId: number) {
@@ -127,6 +159,9 @@ export class MetaElement {
       case 'updateField':
         this.applyFieldChange(diff.previousValue);
         break;
+      case 'updateTranslation':
+        this.applyTranslationChange(diff.previousValue);
+        break;
       case 'updateLocation':
         this.applyLocationChange(diff.previousValue);
         break;
@@ -137,6 +172,9 @@ export class MetaElement {
     switch (diff.action) {
       case 'updateField':
         this.applyFieldChange(diff.nextValue);
+        break;
+      case 'updateTranslation':
+        this.applyTranslationChange(diff.nextValue);
         break;
       case 'updateLocation':
         this.applyLocationChange(diff.nextValue);
@@ -169,8 +207,16 @@ export class MetaElement {
 
   private applyFieldChange(diffRequest: FieldChange) {
     const mutableData = this.data.asObject();
-    const previousValue = mutableData.fields[diffRequest.key];
     mutableData.fields[diffRequest.key] = diffRequest.value;
+    this.applyDataChange(mutableData);
+  }
+
+  private applyTranslationChange(diffRequest: TranslationChange) {
+    const mutableData = this.data.asObject();
+    if (!mutableData.translations[diffRequest.lang]) {
+      mutableData.translations[diffRequest.lang] = {};
+    }
+    mutableData.translations[diffRequest.lang][diffRequest.key] = diffRequest.value;
     this.applyDataChange(mutableData);
   }
 
