@@ -4,6 +4,7 @@ import { EditorContextService } from '../../services/editor-context.service';
 import { MetaElementStoreService } from '../../services/meta-element-store.service';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { HelpEditorDialogComponent } from '../dialog/help-editor-dialog/help-editor-dialog.component';
+import { delay } from 'rxjs/operators';
 
 @Component({
   templateUrl: './base-editor.component.html',
@@ -26,11 +27,14 @@ export class BaseEditorComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log('base editor init');
     this.pageId = this.editorContextService.getCurrentPageId();
     this.htmlElementsService.getPageElements(this.pageId).subscribe((elements: any[]) => {
       console.log('elements', elements);
     });
-    this.metaElementStoreService.change.subscribe(() => this.refreshButtons());
+    this.metaElementStoreService.change
+      .pipe(delay(1))   // sub components might refresh store after view render => add delay to avoid render errors "value has changed"
+      .subscribe(() => this.refreshButtons());
   }
 
   save() {

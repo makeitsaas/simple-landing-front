@@ -1,17 +1,18 @@
-import { AfterViewInit, ChangeDetectorRef, Compiler, Component, ComponentFactoryResolver, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Compiler, Component, ComponentFactoryResolver, OnDestroy, OnInit } from '@angular/core';
 import { ElementDataService } from '../../services/element-data.service';
 import { EditorContextService } from '../../services/editor-context.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { AbstractEditor } from '../abstract/abstract-editor';
 import { SassService } from '../../services/sass.service';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { MetaElementStoreService } from '@modules/editors/services/meta-element-store.service';
 
 @Component({
   templateUrl: './styles-editor.component.html',
   styleUrls: ['./styles-editor.component.scss']
 })
-export class StylesEditorComponent extends AbstractEditor implements OnInit, AfterViewInit {
+export class StylesEditorComponent extends AbstractEditor implements OnInit, AfterViewInit, OnDestroy {
 
   openSidenav = true;
   editorHtmlId: string;
@@ -21,10 +22,13 @@ export class StylesEditorComponent extends AbstractEditor implements OnInit, Aft
   scssError: string|void;
   scssErrorSubject: Subject<string|void> = new Subject<string|void>();
 
+  private subscriptions: Subscription[] = [];
+
   constructor(
     private htmlElementsService: ElementDataService,
     private componentFactoryResolver: ComponentFactoryResolver,
     private editorContextService: EditorContextService,
+    private metaElementStoreService: MetaElementStoreService,
     private compiler: Compiler,
     private sanitizer: DomSanitizer,
     private ref: ChangeDetectorRef,
@@ -34,6 +38,7 @@ export class StylesEditorComponent extends AbstractEditor implements OnInit, Aft
   }
 
   ngOnInit() {
+    this.metaElementStoreService.resetStore();
     this.editorHtmlId = `session-id-${Math.floor(Math.random() * 100000)}`;
     this.scssErrorSubject.pipe(
       debounceTime(1500)
@@ -42,10 +47,16 @@ export class StylesEditorComponent extends AbstractEditor implements OnInit, Aft
 
   ngAfterViewInit() {
     this.pageId = this.editorContextService.getCurrentPageId();
-    this.htmlElementsService.getPageLayers(this.pageId).subscribe(layers => {
+    const s1 = this.htmlElementsService.getPageLayers(this.pageId).subscribe(layers => {
       this.layers = layers;
       this.stylesUrl = this.trustStyles(layers, this.sanitizer);
     });
+
+    this.subscriptions.push(s1);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.map((sub, i) => sub.unsubscribe());
   }
 
   onModelChange() {

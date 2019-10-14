@@ -67,10 +67,13 @@ export class DndTreeService {
     const targetParentElement = element.treeLocation && MetaElementStore.findMetaByLocalId(element.treeLocation.parentMetaElementId);
     const newPosition = element.treeLocation.position;
     let nestedItem = this.findAndRemoveNestedItem(element, tree);
+    console.log('nestedItem', nestedItem);
 
     if (!nestedItem) {
       nestedItem = this.populateAsDraggableChildren(element, MetaElementStore.getMetaElements());
     }
+
+    console.log('targetParentElement', targetParentElement);
 
     if (targetParentElement) {
       const {nestedItem: targetParentDnDItem} = this.findNestedItem(targetParentElement, tree);

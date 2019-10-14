@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DndDropEvent, DropEffect } from 'ngx-drag-drop';
 import { MatSnackBar } from '@angular/material';
 import { ElementDataService } from '../../services/element-data.service';
@@ -10,6 +10,7 @@ import {
 import { MetaElement } from '../../entities/meta-element';
 import { MetaElementStoreService } from '../../services/meta-element-store.service';
 import { EditorContextService } from '../../services/editor-context.service';
+import { Subscription } from 'rxjs';
 
 const columnTemplate: DnDItemTemplate = {
   content: 'New Column',
@@ -41,7 +42,7 @@ const templatesList: DnDItemTemplate[] = [
   templateUrl: './wireframe-editor.component.html',
   styleUrls: ['wireframe-editor.component.scss']
 })
-export class WireframeEditorComponent implements OnInit {
+export class WireframeEditorComponent implements OnInit, OnDestroy {
   itemTemplates: DnDItemTemplate[] = templatesList;
   pageTree: DnDItem;
 
@@ -51,23 +52,32 @@ export class WireframeEditorComponent implements OnInit {
   private currentDragItem: DnDItem | void;
   showTemplates = false;
 
+  private subscriptions: Subscription[] = [];
+
   constructor(
     private snackBarService: MatSnackBar,
     private htmlElementsService: ElementDataService,
     private dndTreeService: DndTreeService,
-    private metaElementStore: MetaElementStoreService,
+    private metaElementStoreService: MetaElementStoreService,
     private editorContextService: EditorContextService
   ) {
   }
 
   ngOnInit() {
+    this.metaElementStoreService.resetStore();
+
     this.pageId = this.editorContextService.getCurrentPageId();
-    this.dndTreeService.getPageTree(this.pageId).subscribe(pageTree => {
+    const s1 = this.dndTreeService.getPageTree(this.pageId).subscribe(pageTree => {
       this.pageTree = pageTree;
       this.dndTreeService.afterSetupCleanPositions(this.pageTree);
     });
-    this.metaElementStore.treeChange.subscribe(element => this.onElementLocation(element));
-    console.log('store session', this.metaElementStore.storeSession);
+    const s2 = this.metaElementStoreService.treeChange.subscribe(element => element && this.onElementLocation(element));
+
+    this.subscriptions.push(s1, s2);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.map((sub, i) => sub.unsubscribe());
   }
 
   toggleContainer(element: MetaElement) {
@@ -113,7 +123,7 @@ export class WireframeEditorComponent implements OnInit {
 
       // logical position, ignoring temporary or copied items
       const logicalPosition = list.slice(0, index).filter(item => {
-        console.log('item', item);
+        // console.log('item', item);
         return item.metaElement !== boundDndItem.metaElement;
       }).length;
 

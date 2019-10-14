@@ -44,8 +44,17 @@ export class MetaElementStoreService {
   ) {
   }
 
-  watchElement(elementDataId: string|number): Observable<MetaElement> {
-    return this.change.pipe(filter(diff => diff && (diff.data.id === elementDataId || `${diff.data.id}` === `${elementDataId}`)));
+  resetStore(): void {
+    this.diffList = [];
+    this.prevIndex = 0;
+    this.treeChangeSubject.next(null);
+    this.changeSubject.next(null);
+    MetaElementStore.purge(); // => should rather implement a bulk refresh from API, but currently easier this way to avoid problems
+  }
+
+  watchElement(elementDataId: string | number): Observable<MetaElement> {
+    return this.change
+      .pipe(filter(diff => diff && (diff.data.id === elementDataId || `${diff.data.id}` === `${elementDataId}`)));
   }
 
   watchMetaElement(localId: number): Observable<MetaElement> {

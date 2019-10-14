@@ -33,5 +33,9 @@ export const MetaElementStore = {
 
   onElementsReady(): Promise<any> {
     return Promise.all(allMetaElements.map(metaElement => metaElement.onSaveReady));
+  },
+
+  purge(): void {
+    allMetaElements.splice(0, allMetaElements.length);
   }
 };

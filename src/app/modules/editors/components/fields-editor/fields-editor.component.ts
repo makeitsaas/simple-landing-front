@@ -1,4 +1,14 @@
-import { AfterViewInit, Compiler, Component, ComponentFactoryResolver, NgModule, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import {
+  AfterViewInit,
+  Compiler,
+  Component,
+  ComponentFactoryResolver,
+  NgModule,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ViewContainerRef
+} from '@angular/core';
 import { ElementDataService, IPageLayers } from '../../services/element-data.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -14,32 +24,37 @@ import { MatButtonModule, MatDialogModule } from '@angular/material';
 import * as generateUuid from 'uuid/v1';
 import { MetaElementStoreService } from '../../services/meta-element-store.service';
 import { SharedModule } from '@shared/shared.module';
+import { Subscription } from 'rxjs';
 
 
 @Component({
   templateUrl: './fields-editor.component.html'
 })
-export class FieldsEditorComponent implements OnInit, AfterViewInit {
+export class FieldsEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('pageContainer', {read: ViewContainerRef}) pageContainer: ViewContainerRef;
 
   layers: IPageLayers;
   stylesUrl: SafeResourceUrl[] = [];
 
+  private subscriptions: Subscription[] = [];
+
   constructor(
     private htmlElementsService: ElementDataService,
     private componentFactoryResolver: ComponentFactoryResolver,
     private editorContextService: EditorContextService,
+    private metaElementStoreService: MetaElementStoreService,
     private compiler: Compiler,
     private sanitizer: DomSanitizer
   ) {
   }
 
   ngOnInit() {
+    this.metaElementStoreService.resetStore();
   }
 
   ngAfterViewInit() {
     const pageId = this.editorContextService.getCurrentPageId();
-    this.htmlElementsService.getPageLayers(pageId).subscribe(layers => {
+    const s1 = this.htmlElementsService.getPageLayers(pageId).subscribe(layers => {
       console.log('page layers', layers);
       this.layers = layers;
       this.stylesUrl = layers.styles
@@ -49,11 +64,17 @@ export class FieldsEditorComponent implements OnInit, AfterViewInit {
           if (/^\//.test(url)) {
             url = `${environment.APIUrl}${url}`;
           }
-          console.log('trust', url);
+          // console.log('trust', url);
           return this.sanitizer.bypassSecurityTrustResourceUrl(url);
         });
       this.appendPageAsComponent(layers);
     });
+
+    this.subscriptions.push(s1);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.map((sub, i) => sub.unsubscribe());
   }
 
   appendPageAsComponent(layers: IPageLayers) {
@@ -85,14 +106,12 @@ export class FieldsEditorComponent implements OnInit, AfterViewInit {
       providers: [
         MetaElementStoreService
       ],
-      entryComponents: [
-      ]
+      entryComponents: []
     })(class {
     });
 
     this.compiler.compileModuleAndAllComponentsAsync(module)
       .then(factories => {
-        console.log('factories', factories);
         // Get the component factory.
         const componentFactory = factories.componentFactories.filter(factory => factory.selector === generatedComponentSelector)[0];
         // Create the component and add to the view.

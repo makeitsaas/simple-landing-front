@@ -15,7 +15,7 @@ export class AbstractEditor {
         if (/^\//.test(url)) {
           url = `${environment.APIUrl}${url}`;
         }
-        console.log('trust', url);
+        // console.log('trust', url);
         return sanitizer.bypassSecurityTrustResourceUrl(url);
       });
   }
