@@ -1,4 +1,5 @@
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import './variables/manage-variables.scss';
 
 /*
 @import '~@angular/material/theming';
@@ -13,7 +14,35 @@ $custom-typography: mat-typography-config(
   font-family: Roboto, "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
-.page-layout > .content {
+
+
+img {
+  max-width: 100%;
+}
+
+header {
+  height: 50px;
+}
+
+header nav {
+  margin: auto;
+  max-width: 1000px;
+}
+
+footer {
+  min-height: 50px;
+  background-color: $color-inverse;
+  color: $color-white;
+}
+
+.page-layout {
+  //min-height: 100%;
+  min-height: calc(100vh - 90px);
+  background-color: $color-default;
+}
+
+.container {
+  position: relative;
   margin: auto;
   padding: 10px 15px;
   max-width: 800px;

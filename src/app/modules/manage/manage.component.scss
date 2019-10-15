@@ -1,7 +1,10 @@
+@import 'variables/manage-variables.scss';
+
 header {
   height: 37px;
   //width: 100%;
-  background-color: #EEE;
+  color: $color-white;
+  background-color: $color-primary;
   padding: 5px 10px;
 
   .menu-left {
@@ -21,6 +24,17 @@ header {
 
   .menu-right {
     float: right;
+  }
+
+  .logo {
+    &:after {
+      content: ' ';
+      position: absolute;
+      right: 0px;
+      top: 5px;
+      bottom: 5px;
+      border-right: 1px solid $color-white;
+    }
   }
 }
 

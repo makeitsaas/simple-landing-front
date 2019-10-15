@@ -1,12 +1,10 @@
-<div class="page-layout">
-  <div class="content">
-    Account settings
-    <pre>{{somethingResponse || errorResponse | json}}</pre>
+<div class="container">
+  Account settings
+  <pre>{{somethingResponse || errorResponse | json}}</pre>
 
-    <app-shared-upload-area [(medias)]="medias"></app-shared-upload-area>
+  <app-shared-upload-area [(medias)]="medias"></app-shared-upload-area>
 
-    <div *ngFor="let file of medias">
-      <img [src]="file.absoluteUrl"/>
-    </div>
+  <div *ngFor="let file of medias">
+    <img [src]="file.absoluteUrl"/>
   </div>
 </div>

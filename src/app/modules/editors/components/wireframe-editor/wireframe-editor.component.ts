@@ -31,7 +31,7 @@ const templatesList: DnDItemTemplate[] = [
     children: [columnTemplate, columnTemplate]
   },
   {
-    content: 'Text block',
+    content: 'Text only',
     type: 'block',
     children: [],
     fields: {},

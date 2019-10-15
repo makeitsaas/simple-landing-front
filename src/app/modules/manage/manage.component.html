@@ -19,8 +19,17 @@
       <header>
         <nav>
           <div class="menu-left">
-            <button mat-button (click)="sidenav.toggle()">
-              <mat-icon class="secondary-text mat-icon material-icons mat-icon-no-color" role="img" aria-hidden="true">menu</mat-icon>
+            <button mat-button class="logo">
+              Simple Landing
+            </button>
+<!--            <button mat-button (click)="sidenav.toggle()">-->
+<!--              <mat-icon class="secondary-text mat-icon material-icons mat-icon-no-color" role="img" aria-hidden="true">menu</mat-icon>-->
+<!--            </button>-->
+            <button mat-button>
+              Action 1
+            </button>
+            <button mat-button>
+              Action 2
             </button>
           </div>
 
@@ -38,9 +47,9 @@
             </button>
           </div>
 
-          <div class="menu-center">
-            <h4>Simple Landing</h4>
-          </div>
+<!--          <div class="menu-center">-->
+<!--            <h4>Simple Landing</h4>-->
+<!--          </div>-->
         </nav>
       </header>
       <div class="content-wrapper">
@@ -48,6 +57,11 @@
           <router-outlet></router-outlet>
         </div>
       </div>
+      <footer>
+        <div class="container">
+          this is footer
+        </div>
+      </footer>
     </mat-sidenav-content>
   </mat-sidenav-container>
 
