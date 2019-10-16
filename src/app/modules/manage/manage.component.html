@@ -18,18 +18,20 @@
       <!-- CONTENT -->
       <header>
         <nav>
-          <div class="menu-left">
-            <button mat-button class="logo">
+          <div class="menu-left" fxHide.xs>
+            <button mat-button class="logo" routerLink="/manage/dashboard" routerLinkActive="mat-accent">
               Simple Landing
             </button>
-<!--            <button mat-button (click)="sidenav.toggle()">-->
-<!--              <mat-icon class="secondary-text mat-icon material-icons mat-icon-no-color" role="img" aria-hidden="true">menu</mat-icon>-->
-<!--            </button>-->
-            <button mat-button>
-              Action 1
+            <button mat-button routerLink="/manage/projects" routerLinkActive="mat-accent">
+              Pages
             </button>
-            <button mat-button>
-              Action 2
+            <button mat-button routerLink="/manage/templates" routerLinkActive="mat-accent">
+              Templates
+            </button>
+          </div>
+          <div class="menu-left" fxShow.xs fxHide.gt-xs>
+            <button mat-button (click)="sidenav.toggle()">
+              <mat-icon class="secondary-text mat-icon material-icons mat-icon-no-color" role="img" aria-hidden="true">menu</mat-icon>
             </button>
           </div>
 
@@ -47,9 +49,11 @@
             </button>
           </div>
 
-<!--          <div class="menu-center">-->
-<!--            <h4>Simple Landing</h4>-->
-<!--          </div>-->
+          <div class="menu-center" fxShow.xs fxHide.gt-xs>
+            <button mat-button routerLink="/manage/dashboard" routerLinkActive="mat-accent">
+              Simple Landing
+            </button>
+          </div>
         </nav>
       </header>
       <div class="content-wrapper">

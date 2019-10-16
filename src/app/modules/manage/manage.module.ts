@@ -5,6 +5,7 @@ import { ManageRoutingModule } from './manage-routing.module';
 import { ManageComponent } from './manage.component';
 import { MatButtonModule, MatCheckboxModule, MatIconModule, MatListModule, MatMenuModule, MatSidenavModule } from '@angular/material';
 import { CommonModule } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { CommonModule } from '@angular/common';
     MatSidenavModule,
     MatCheckboxModule,
     MatIconModule,
-    MatListModule
+    MatListModule,
+    FlexLayoutModule
   ],
   declarations: [
     ManageComponent

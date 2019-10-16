@@ -15,6 +15,14 @@ const manageRoutes: Routes = [
         path: 'settings',
         loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule)
       },
+      {
+        path: 'projects',
+        loadChildren: () => import('./projects/projects.module').then(m => m.ProjectsModule)
+      },
+      {
+        path: 'templates',
+        loadChildren: () => import('./templates/templates.module').then(m => m.TemplatesModule)
+      },
     ]
     // component
   }

@@ -11,15 +11,14 @@ header {
     float: left;
   }
 
+  [mat-button] {
+    font-family: $font-primary;
+  }
+
   .menu-center {
     margin: auto;
     width: 200px;
     text-align: center;
-
-    & > * {
-      margin: 0;
-      padding-top: 10px;
-    }
   }
 
   .menu-right {
@@ -27,6 +26,8 @@ header {
   }
 
   .logo {
+
+    font-weight: bold;
     &:after {
       content: ' ';
       position: absolute;
@@ -34,6 +35,7 @@ header {
       top: 5px;
       bottom: 5px;
       border-right: 1px solid $color-white;
+      opacity: .5;
     }
   }
 }
