@@ -202,10 +202,19 @@ export class MetaElementStoreService {
     });
   }
 
+  /**
+   * This function purpose is to establish the list of all elements changes that have to be saved.
+   * These changes will all be gathered in dtoById objects.
+   *
+   * Processing :
+   *   - In this function, we browse diffList to check all keys that might have changed (treeLocation, field, translation, ...).
+   *   - When a key change is found, we use as value what metaElement.data currently has (this is what user sees)
+   *   - We finally set dtoById expected (key, value) parameter
+   */
   private convertDiffsToDtoList(): { [elementId: number]: UpdateElementDto } {
     const dtoById: { [elementId: number]: UpdateElementDto } = {};
-    this.diffList.slice(0, this.diffList.length - this.prevIndex).map(entry => {
-      // console.log(`entry apply "${entry.diff.action}" to ${entry.metaElement.data.id} with data`, entry.diff.nextValue);
+    console.log('diffs', this.diffList, this.prevIndex, this.diffList.slice(0, this.diffList.length - this.prevIndex));
+    this.diffList.map(entry => {
       const localData = entry.metaElement.data;
       const elementId = localData.id;
       if (!dtoById[elementId]) {

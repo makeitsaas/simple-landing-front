@@ -3,6 +3,6 @@
   <p>What's your favorite animal?</p>
 </div>
 <div mat-dialog-actions>
-  <button mat-button>No Thanks</button>
+  <button mat-button [mat-dialog-close]="false">No Thanks</button>
   <button mat-button [mat-dialog-close]="false" cdkFocusInitial>Ok</button>
 </div>
