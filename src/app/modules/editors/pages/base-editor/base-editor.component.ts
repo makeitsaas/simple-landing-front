@@ -3,7 +3,7 @@ import { ElementDataService } from '../../services/element-data.service';
 import { EditorContextService } from '../../services/editor-context.service';
 import { MetaElementStoreService } from '../../services/meta-element-store.service';
 import { MatDialog, MatSnackBar } from '@angular/material';
-import { HelpEditorDialogComponent } from '../dialog/help-editor-dialog/help-editor-dialog.component';
+import { HelpEditorDialogComponent } from '../../components/dialog/help-editor-dialog/help-editor-dialog.component';
 import { delay } from 'rxjs/operators';
 
 @Component({

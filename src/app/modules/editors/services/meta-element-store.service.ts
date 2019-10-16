@@ -213,7 +213,7 @@ export class MetaElementStoreService {
    */
   private convertDiffsToDtoList(): { [elementId: number]: UpdateElementDto } {
     const dtoById: { [elementId: number]: UpdateElementDto } = {};
-    console.log('diffs', this.diffList, this.prevIndex, this.diffList.slice(0, this.diffList.length - this.prevIndex));
+
     this.diffList.map(entry => {
       const localData = entry.metaElement.data;
       const elementId = localData.id;

@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Compiler, Component, ComponentFactory
 import { ElementDataService } from '../../services/element-data.service';
 import { EditorContextService } from '../../services/editor-context.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { AbstractEditor } from '../abstract/abstract-editor';
+import { AbstractEditor } from '../../components/abstract/abstract-editor';
 import { SassService } from '../../services/sass.service';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';

@@ -1,9 +1,9 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { BaseEditorComponent } from './components/base-editor/base-editor.component';
-import { WireframeEditorComponent } from './components/wireframe-editor/wireframe-editor.component';
-import { FieldsEditorComponent } from './components/fields-editor/fields-editor.component';
-import { StylesEditorComponent } from './components/styles-editor/styles-editor.component';
+import { BaseEditorComponent } from './pages/base-editor/base-editor.component';
+import { WireframeEditorComponent } from './pages/wireframe-editor/wireframe-editor.component';
+import { FieldsEditorComponent } from './pages/fields-editor/fields-editor.component';
+import { StylesEditorComponent } from './pages/styles-editor/styles-editor.component';
 
 const editorsRoutes: Routes = [
   {
