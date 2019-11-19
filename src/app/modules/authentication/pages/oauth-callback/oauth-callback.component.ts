@@ -7,8 +7,8 @@ import { AuthService } from '../../services/auth.service';
 })
 export class OauthCallbackComponent implements OnInit {
 
-  private strategy: string;
-  private providerCode: string;
+  public strategy: string;
+  public providerCode: string;
 
   loading = false;
   successMessage: string;

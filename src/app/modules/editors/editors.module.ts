@@ -44,9 +44,9 @@ const monacoConfig: NgxMonacoEditorConfig = {
       enabled: false
     }
   }, // pass default options to be used
-  onMonacoLoad: () => {
-    // console.log((<any> window).monaco);
-  }
+  // onMonacoLoad: () => {
+  //   // console.log((<any> window).monaco);
+  // }
 };
 
 @NgModule({
