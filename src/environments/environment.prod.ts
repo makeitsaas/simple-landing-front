@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  authAPIUrl: 'http://localhost:3005'
+  APIUrl: 'http://simplelanding-api.lab.makeitsaas.com',
+  authAPIUrl: 'http://simplelanding-api.lab.makeitsaas.com/auth'
 };
